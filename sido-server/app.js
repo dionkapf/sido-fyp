@@ -10,6 +10,8 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var districtRouter = require("./routes/district");
 var regionRouter = require("./routes/region");
+var branchRouter = require("./routes/branch");
+var roleRouter = require("./routes/role");
 
 var app = express();
 
@@ -23,6 +25,8 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api/district", districtRouter);
 app.use("/api/region", regionRouter);
+app.use("/api/branch", branchRouter);
+app.use("/api/role", roleRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
