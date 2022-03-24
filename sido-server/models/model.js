@@ -16,13 +16,14 @@ class Model {
       text: `SELECT ${columns} FROM ${this.table}`,
       values: values,
     };
+
     if (join_clauses) {
       join_clauses.forEach((join_clause) => {
         query.text += " " + join_clause;
       });
     }
     if (clause) query.text += " " + clause;
-    console.log(query.text);
+    console.log(query);
     return this.pool.query(query);
   }
 
