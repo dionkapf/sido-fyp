@@ -8,10 +8,23 @@ var logger = require("morgan");
 // Routes
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var districtRouter = require("./routes/district");
-var regionRouter = require("./routes/region");
 var branchRouter = require("./routes/branch");
 var roleRouter = require("./routes/role");
+var branchRouter = require("./routes/branch");
+var collateralRouter = require("./routes/collateral");
+var districtRouter = require("./routes/district");
+var formRequestRouter = require("./routes/formalization_request");
+var loanRouter = require("./routes/loan");
+var loan_requestRouter = require("./routes/loan_request");
+var ownerRouter = require("./routes/owner");
+var regionRouter = require("./routes/region");
+var reminderRouter = require("./routes/reminder");
+var repaymentRouter = require("./routes/repayment");
+var roleRouter = require("./routes/role");
+var sectorRouter = require("./routes/sector");
+var staffRouter = require("./routes/staff");
+// var userRouter = require('./routes/user');
+var witnessRouter = require("./routes/witness");
 
 var app = express();
 
@@ -22,11 +35,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/api/district", districtRouter);
-app.use("/api/region", regionRouter);
-app.use("/api/branch", branchRouter);
-app.use("/api/role", roleRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/branches", branchRouter);
+app.use("/api/collaterals", collateralRouter);
+app.use("/api/districts", districtRouter);
+app.use("/api/formalization-requests", formRequestRouter);
+app.use("/api/loans", loanRouter);
+app.use("/api/loan-requests", loan_requestRouter);
+app.use("/api/owners", ownerRouter);
+app.use("/api/regions", regionRouter);
+app.use("/api/reminders", reminderRouter);
+app.use("/api/repayments", repaymentRouter);
+app.use("/api/roles", roleRouter);
+app.use("/api/sectors", sectorRouter);
+app.use("/api/staff", staffRouter);
+// app.use('/api/user', userRouter);
+app.use("/api/witness", witnessRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
