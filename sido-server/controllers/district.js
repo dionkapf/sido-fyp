@@ -13,7 +13,7 @@ const getDistrict = (req, res) => {
       ["INNER JOIN region ON region.id = district.region AND district.id = $1"]
     )
     .then((district_data) => {
-      res.status(200).json(district_data.rows);
+      res.status(200).json({ success: true, data: district_data.rows });
     })
     .catch((error) => {
       console.log(error);
@@ -29,7 +29,7 @@ const getDistricts = (req, res) => {
       ["INNER JOIN region ON region.id = district.region"]
     )
     .then((district_data) => {
-      res.status(200).json(district_data.rows);
+      res.status(200).json({ success: true, data: district_data.rows });
     })
     .catch((error) => {
       console.log(error);
