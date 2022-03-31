@@ -50,7 +50,7 @@ app.use("/api/roles", roleRouter);
 app.use("/api/sectors", sectorRouter);
 app.use("/api/staff", staffRouter);
 // app.use('/api/user', userRouter);
-app.use("/api/witness", witnessRouter);
+app.use("/api/witnesses", witnessRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
