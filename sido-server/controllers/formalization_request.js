@@ -56,9 +56,7 @@ const getFormalizationRequests = (req, res) => {
         []
       )
       .then((request_data) => {
-        console.log("BRANCHES: ", branches);
         request_data.rows.forEach((request) => {
-          console.log("BRANCH ID: %d", request.branch);
           const branch = branches.find((branch) => branch.id == request.branch);
           branch.region_id = branch.region;
           delete branch.region;
