@@ -13,7 +13,11 @@ const getBranch = (req, res) => {
       ["INNER JOIN region ON region.id = branch.region AND branch.id = $1"]
     )
     .then((branch_data) => {
-      res.status(200).json({ success: true, data: branch_data.rows });
+      if (branch_data.rowCount > 0) {
+        res.status(200).json({ success: true, data: branch_data.rows[0] });
+      } else {
+        res.status(200).json({ success: true, data: [] });
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -29,7 +33,11 @@ const getBranches = (req, res) => {
       ["INNER JOIN region ON region.id = branch.region"]
     )
     .then((branch_data) => {
-      res.status(200).json({ success: true, data: branch_data.rows });
+      if (branch_data.rowCount > 0) {
+        res.status(200).json({ success: true, data: branch_data.rows });
+      } else {
+        res.status(200).json({ success: true, data: [] });
+      }
     })
     .catch((error) => {
       console.log(error);

@@ -22,17 +22,21 @@ const getFormalizationRequest = (req, res) => {
         ["WHERE id = $1"]
       )
       .then((request_data) => {
-        console.log("BRANCHES: ", branches);
-        request_data.rows.forEach((request) => {
-          console.log("BRANCH ID: %d", request.branch);
-          const branch = branches.find((branch) => branch.id == request.branch);
-          branch.region_id = branch.region;
-          delete branch.region;
-          request.branch = branch;
-          request.owner_id = request.owner;
-          delete request.owner;
-        });
-        res.status(200).json({ success: true, data: request_data.rows[0] });
+        if (request_data.rowCount > 0) {
+          request_data.rows.forEach((request) => {
+            const branch = branches.find(
+              (branch) => branch.id == request.branch
+            );
+            branch.region_id = branch.region;
+            delete branch.region;
+            request.branch = branch;
+            request.owner_id = request.owner;
+            delete request.owner;
+          });
+          res.status(200).json({ success: true, data: request_data.rows[0] });
+        } else {
+          res.status(200).json({ success: true, data: [] });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -56,15 +60,21 @@ const getFormalizationRequests = (req, res) => {
         []
       )
       .then((request_data) => {
-        request_data.rows.forEach((request) => {
-          const branch = branches.find((branch) => branch.id == request.branch);
-          branch.region_id = branch.region;
-          delete branch.region;
-          request.branch = branch;
-          request.owner_id = request.owner;
-          delete request.owner;
-        });
-        res.status(200).json({ success: true, data: request_data.rows });
+        if (request_data.rowCount > 0) {
+          request_data.rows.forEach((request) => {
+            const branch = branches.find(
+              (branch) => branch.id == request.branch
+            );
+            branch.region_id = branch.region;
+            delete branch.region;
+            request.branch = branch;
+            request.owner_id = request.owner;
+            delete request.owner;
+          });
+          res.status(200).json({ success: true, data: request_data.rows });
+        } else {
+          res.status(200).json({ success: true, data: [] });
+        }
       })
       .catch((error) => {
         console.log(error);
