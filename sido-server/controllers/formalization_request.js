@@ -2,10 +2,6 @@ const { getBranch, getBranches } = require("./branch");
 
 const Model = require("../models/model").Model;
 
-const generateDateColumn = (date, column_name, date_format = "yyyy-mm-dd") => {
-  return ` TO_CHAR(${date} :: DATE, ${date_format}) AS ${column_name}`;
-};
-
 const getFormalizationRequest = (req, res) => {
   new Model("branch").select(`*`, "", [], []).then((branches) => {
     branches = branches.rows;
