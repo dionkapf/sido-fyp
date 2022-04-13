@@ -1,5 +1,5 @@
-var express = require("express");
-var router = express.Router();
+let express = require("express");
+let router = express.Router();
 const { getReminder, getReminders } = require("../controllers/reminder");
 
 router.route("/").get(getReminders);
