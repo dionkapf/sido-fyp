@@ -1,41 +1,47 @@
 // Module variables
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
+let corsOptions = {
+  origin: "https://localhost:5001",
+};
 
 // Routes
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var branchRouter = require("./routes/branch");
-var roleRouter = require("./routes/role");
-var branchRouter = require("./routes/branch");
-var collateralRouter = require("./routes/collateral");
-var districtRouter = require("./routes/district");
-var formRequestRouter = require("./routes/formalization_request");
-var loanRouter = require("./routes/loan");
-var loan_requestRouter = require("./routes/loan_request");
-var ownerRouter = require("./routes/owner");
-var regionRouter = require("./routes/region");
-var reminderRouter = require("./routes/reminder");
-var repaymentRouter = require("./routes/repayment");
-var roleRouter = require("./routes/role");
-var sectorRouter = require("./routes/sector");
-var staffRouter = require("./routes/staff");
-// var userRouter = require('./routes/user');
-var witnessRouter = require("./routes/witness");
+let indexRouter = require("./routes/index");
+let branchRouter = require("./routes/branch");
+let roleRouter = require("./routes/role");
+let collateralRouter = require("./routes/collateral");
+let districtRouter = require("./routes/district");
+let formRequestRouter = require("./routes/formalization_request");
+let loanRouter = require("./routes/loan");
+let loan_requestRouter = require("./routes/loan_request");
+let ownerRouter = require("./routes/owner");
+let regionRouter = require("./routes/region");
+let reminderRouter = require("./routes/reminder");
+let repaymentRouter = require("./routes/repayment");
+let sectorRouter = require("./routes/sector");
+let staffRouter = require("./routes/staff");
+let witnessRouter = require("./routes/witness");
+let registerRouter = require("./routes/register");
+let loginRouter = require("./routes/login");
 
-var app = express();
+const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+// Routes
 app.use("/", indexRouter);
-app.use("/api/users", usersRouter);
+app.use("/login", loginRouter);
+app.use("/register", registerRouter);
+
+// API Routes
+// app.use("/api/users", usersRouter);
 app.use("/api/branches", branchRouter);
 app.use("/api/collaterals", collateralRouter);
 app.use("/api/districts", districtRouter);
