@@ -41,6 +41,15 @@ class Model {
     return this.pool.query(query);
   }
 
+  async delete(column, value) {
+    let query = {
+      text: `DELETE FROM ${this.table} WHERE ${column} = $1`,
+      values: value,
+    };
+    console.log(query);
+    return this.pool.query(query);
+  }
+
   placeHolderTextMaker(values) {
     let values_string = [];
     for (let i = 1; i < values.length + 1; i++) values_string.push(`$${i}`);
