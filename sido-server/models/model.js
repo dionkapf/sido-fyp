@@ -28,7 +28,8 @@ class Model {
   }
 
   async insert(columns, values) {
-    if (columns.length !== values.length) throw error;
+    if (columns.length !== values.length)
+      throw console.error("Values and columns do not match");
     let values_string = this.placeHolderTextMaker(values);
     let query = {
       text: `INSERT INTO ${
@@ -36,6 +37,7 @@ class Model {
       } (${columns.join()}) VALUES (${values_string.join()}) RETURNING *`,
       values: values,
     };
+    console.log(query);
     return this.pool.query(query);
   }
 
