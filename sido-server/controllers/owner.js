@@ -86,7 +86,44 @@ const getOwners = (req, res) => {
   });
 };
 
+const getOwnerByUserId = async (id) => {
+  const sectors = await (
+    await new Model("sector").select(`*`, "", [], [])
+  ).rows;
+  const owners = await await new Model("owner").select(
+    `
+    first_name,
+    middle_name,
+    last_name,
+    birthdate,
+    email,
+    phone_number,
+    business_name,
+    business_type,
+    sex,
+    sector,
+    formalized,
+    address
+    `,
+    "",
+    [parseInt(id)],
+    ["WHERE user_id = $1"]
+  );
+  if (owners.rowCount > 0) {
+    owners.rows.forEach((owner) => {
+      const sector = sectors.find((sector) => sector.id == owner.sector);
+      owner.sector_id = owner.sector;
+      delete owner.sector;
+    });
+    return owners.rows[0];
+  } else {
+    return null;
+  }
+};
+
 module.exports = {
   getOwner,
   getOwners,
+  getOwnerByUserId,
+  getOwnerByUserId: getOwnerByUserId,
 };

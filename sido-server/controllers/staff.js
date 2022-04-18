@@ -78,7 +78,23 @@ const getStaffs = (req, res) => {
     });
 };
 
+const getStaffByUserId = async (id) => {
+  return await new Model("staff")
+    .select(`*`, "", [parseInt(id)], ["WHERE user_id = $1"])
+    .then((staff_data) => {
+      if (staff_data.rowCount > 0) {
+        return staff_data.rows[0];
+      } else {
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getStaff,
   getStaffs,
+  getStaffByUserId,
 };

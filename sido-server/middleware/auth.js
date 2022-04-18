@@ -1,9 +1,10 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const { createUser } = require("../controllers/users");
+const { createUser, getUserDetails } = require("../controllers/users");
 const saltRounds = 10;
 const Model = require("../models/model").Model;
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const {
   getToken,
   deleteTokensByUserId,
@@ -41,7 +42,7 @@ function checkifUserExists(username) {
 
 const registerUser = async (req, res) => {
   console.log("Registering...");
-  const { username, password, confirmPassword } = req.body;
+  const { username, password, confirmPassword, role } = req.body;
   if (!(username && password && confirmPassword)) {
     res.status(400).json({ success: false, message: "Missing fields" });
   }
@@ -64,8 +65,8 @@ const registerUser = async (req, res) => {
   } else {
     try {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const user = { username, password: hashedPassword };
-      console.log("Entering function...");
+      const user = { username, password: hashedPassword, role };
+      console.log("User", user);
       await createUser(user);
       res.status(200).json({ success: true });
     } catch (err) {
@@ -119,17 +120,27 @@ const loginUser = async (req, res) => {
             console.log("Generating refresh token...");
             refreshToken = await generateRefreshToken(user);
           }
-          const user_data = {
-            id: user.id,
-            username: user.name,
-            role: user.role,
-            accessToken,
-            refreshToken,
-          };
-          res.status(200).json({
-            success: true,
-            message: "Logged in successfully",
-            user: user_data,
+          const id = parseInt(user.id);
+          const role = parseInt(user.role);
+          const fuck = await getUserDetails(id, role);
+          console.log("User details retrieved from database", fuck);
+          await getUserDetails(id, role).then((user_details) => {
+            if (!user_details) {
+              console.log("User details not found");
+            } else console.log("User: ", user_details);
+            const user_data = {
+              id: user.id,
+              username: user.name,
+              role: user.role,
+              ...user_details,
+              accessToken,
+              refreshToken,
+            };
+            res.status(200).json({
+              success: true,
+              message: "Logged in successfully",
+              user: user_data,
+            });
           });
         }
       }
@@ -248,7 +259,7 @@ async function getRefreshToken(user_id) {
     if (validTokens && validTokens.length > 0) {
       return validTokens[0].token;
     } else {
-      deleteTokensByUserId(user.id);
+      deleteTokensByUserId(user_id);
       return null;
     }
   });
