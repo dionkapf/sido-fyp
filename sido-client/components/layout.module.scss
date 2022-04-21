@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  min-height: 40rem;
+}
+
+.sidebar {
+  width: 30%;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  background-color: white;
+}
+
+.main > section {
+  padding: 32px;
+}
