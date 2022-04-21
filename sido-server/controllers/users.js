@@ -99,4 +99,5 @@ module.exports = {
   getUsers,
   createUser,
   getUserDetails,
+  USER_ROLE,
 };
