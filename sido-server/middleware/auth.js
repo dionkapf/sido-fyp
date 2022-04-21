@@ -138,6 +138,7 @@ const loginUser = async (req, res) => {
               accessToken,
               refreshToken,
             };
+            res.setHeader("Authorization", "Bearer " + accessToken);
             res.cookie("accessToken", user_data.accessToken, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
