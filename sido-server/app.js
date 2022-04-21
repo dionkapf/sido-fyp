@@ -6,7 +6,9 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 let corsOptions = {
-  origin: "https://localhost:5001",
+  methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
+  credentials: true,
+  origin: ["http://localhost:5001", "http://localhost:3000"],
 };
 
 // Routes
@@ -35,6 +37,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors(corsOptions));
+
 // Routes
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
