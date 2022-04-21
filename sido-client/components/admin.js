@@ -6,7 +6,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Layout from "../components/layout";
+import DashboardLayout from "../components/dashboard-layout";
 import TextField from "@material-ui/core/TextField";
 import styles from "../styles/Hello.module.scss";
 
@@ -30,7 +30,7 @@ export default function Admin({ list, title, description }) {
     columns.push(newKey);
   }
   return (
-    <Layout title={title}>
+    <DashboardLayout title={title}>
       <main className={styles.main}>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.subtitle}>
@@ -74,6 +74,6 @@ export default function Admin({ list, title, description }) {
           </Table>
         </TableContainer>
       </main>
-    </Layout>
+    </DashboardLayout>
   );
 }
