@@ -1,6 +1,10 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const { createUser, getUserDetails } = require("../controllers/users");
+const {
+  createUser,
+  getUserDetails,
+  USER_ROLE,
+} = require("../controllers/users");
 const saltRounds = 10;
 const Model = require("../models/model").Model;
 const jwt = require("jsonwebtoken");
@@ -121,9 +125,7 @@ const loginUser = async (req, res) => {
             refreshToken = await generateRefreshToken(user);
           }
           const id = parseInt(user.id);
-          const role = parseInt(user.role);
-          const fuck = await getUserDetails(id, role);
-          console.log("User details retrieved from database", fuck);
+          const role = user.role;
           await getUserDetails(id, role).then((user_details) => {
             if (!user_details) {
               console.log("User details not found");
@@ -136,6 +138,14 @@ const loginUser = async (req, res) => {
               accessToken,
               refreshToken,
             };
+            res.cookie("accessToken", user_data.accessToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+            });
+            res.cookie("refreshToken", user_data.refreshToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+            });
             res.status(200).json({
               success: true,
               message: "Logged in successfully",
@@ -151,33 +161,57 @@ const loginUser = async (req, res) => {
   }
 };
 
-function authenticateToken(req, res, next) {
-  const { validRoles } = req.body;
+async function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null)
     return res
       .status(401)
       .json({ success: false, message: "Unauthorized access" });
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
+        console.log("Token has expired");
+        const refreshToken = req.cookies.refreshToken;
+        const { accessToken, success } = await refreshAccessTokenHandler(
+          refreshToken
+        );
+        if (success) {
+          res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          });
+          req.headers["authorization"] = `Bearer ${accessToken}`;
+          return next();
+        } else {
+          return res
+            .status(403)
+            .json({ success: false, message: "Bad refresh token" });
+        }
+      } else {
         return res
-          .status(403)
-          .json({ success: false, message: "Access Token has expired" });
+          .status(404)
+          .json({ success: false, message: "Token is not valid" });
       }
-      console.error("Error verifying token: ", err);
-      return res.status(403).json({ success: false, message: err.message });
     }
     req.user = user;
     next();
   });
 }
 
-function authorizeUser(req, res, next) {
-  const { validRoles } = req.body;
-  const { role } = req.user;
-  if (validRoles.includes(role)) {
+function authorizeUserHandler(user, validRoles) {
+  if (!user) {
+    return false;
+  }
+  if (validRoles.includes(user.role)) {
+    return true;
+  }
+  return false;
+}
+
+function authorizeAdmin(req, res, next) {
+  validRoles = [user_role.ADMIN];
+  if (authorizeUserHandler(req.user, validRoles)) {
     next();
   } else {
     res.status(403).json({
@@ -187,12 +221,137 @@ function authorizeUser(req, res, next) {
   }
 }
 
-function generateAccessToken(user) {
-  return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "30s" });
+function authorizeOperations(req, res, next) {
+  validRoles = [
+    USER_ROLE.ADMIN,
+    USER_ROLE.BUSINESS,
+    USER_ROLE.FINANCE,
+    USER_ROLE.LOAN,
+    USER_ROLE.TRAINING,
+  ];
+  if (authorizeUserHandler(req.user, validRoles)) {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      message: "You do not have permission to perform this action",
+    });
+  }
 }
 
-function refreshAccessToken(req, res) {
-  const refreshToken = req.body.refreshToken;
+function authorizeExecutive(req, res, next) {
+  validRoles = [USER_ROLE.ADMIN, USER_ROLE.BUSINESS, USER_ROLE.FINANCE];
+  if (authorizeUserHandler(req.user, validRoles)) {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      message: "You do not have permission to perform this action",
+    });
+  }
+}
+
+const getCurrentUser = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const accessToken = authHeader && authHeader.split(" ")[1];
+  try {
+    const { id, username, role, exp } = jwt.decode(accessToken);
+    const user = await getUserDetails(id, role);
+    const n = new Date(exp * 1000);
+    if (!user) {
+      console.log("No user?");
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "User details retrieved successfully",
+        user: {
+          username,
+          ...user,
+          accessToken,
+        },
+      });
+    }
+  } catch (error) {
+    if (error.message === "jwt expired") console.log("Expireed bitch");
+  }
+};
+
+const validateToken = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          console.log("Token has expired");
+          res.status(401).json({
+            success: false,
+            message: "Token has expired",
+          });
+        } else {
+          res.status(403).json({
+            success: false,
+            message: "Token is not valid",
+          });
+        }
+      } else {
+        res.status(200).json({
+          success: true,
+          message: "Token is valid",
+        });
+      }
+    });
+  } catch (error) {
+    res.status(403).json({
+      success: false,
+      message: "Token is not valid",
+    });
+  }
+};
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "15m" });
+}
+
+async function refreshAccessTokenHandler(refreshToken) {
+  let response = {};
+  const token_data = await getToken(refreshToken);
+  if (token_data && token_data.rowCount === 0) {
+    return {
+      success: false,
+      message: "Forbidden",
+    };
+  } else {
+    await jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      (err, user) => {
+        if (err) {
+          console.error("Error verifying token: ", err);
+          return {
+            success: false,
+            message: "Forbidden",
+          };
+        }
+        const accessToken = generateAccessToken({
+          username: user.username,
+          id: user.id,
+          role: user.role,
+        });
+        console.log("Access TOken!", accessToken);
+        response = {
+          success: true,
+          message: "Refresh token successful",
+          accessToken,
+        };
+      }
+    );
+    return response;
+  }
+}
+
+async function refreshAccessToken(req, res) {
+  const refreshToken = req.cookies.refreshToken;
   console.log("Refresh token: ", refreshToken);
   if (!refreshToken) {
     return res.status(401).json({
@@ -200,38 +359,23 @@ function refreshAccessToken(req, res) {
       message: "No refresh token provided",
     });
   }
-  getToken(refreshToken).then((token_data) => {
-    if (token_data && token_data.rowCount === 0) {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden",
-      });
-    } else {
-      jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET,
-        (err, user) => {
-          if (err) {
-            return res.status(403).json({
-              success: false,
-              message: "Forbidden",
-            });
-          }
-          const accessToken = generateAccessToken({
-            username: user.username,
-            id: user.id,
-            role: user.role,
-          });
-          console.log(accessToken);
-          res.status(200).json({
-            success: true,
-            message: "Refresh token successful",
-            accessToken,
-          });
-        }
-      );
-    }
-  });
+  const response = await refreshAccessTokenHandler(refreshToken);
+  console.log("Response: ", response);
+  if (response.success) {
+    res.cookie("accessToken", response.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully",
+    });
+  } else {
+    res.status(403).json({
+      success: false,
+      message: "Forbidden",
+    });
+  }
 }
 
 function generateRefreshToken(user) {
@@ -268,8 +412,13 @@ async function getRefreshToken(user_id) {
 module.exports = {
   registerUser,
   loginUser,
+  getCurrentUser,
   checkifUserExists,
   authenticateToken,
+  validateToken,
   generateAccessToken,
   refreshAccessToken,
+  authorizeAdmin,
+  authorizeOperations,
+  authorizeExecutive,
 };
