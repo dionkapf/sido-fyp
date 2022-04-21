@@ -12,7 +12,6 @@ export default function Layout({ children, title }) {
       </Head>
       <MenuAppBar />
       <div className={styles.container}>
-        <Sidebar className={styles.sidebar} />
         <main className={styles.main}>{children}</main>
       </div>
       <Footer />
