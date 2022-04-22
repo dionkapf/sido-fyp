@@ -4,7 +4,7 @@ import Sidebar from "./sidebar";
 import MenuAppBar from "./menuappbar";
 import Footer from "./footer";
 
-export default function DashboardLayout({ children, title }) {
+export default function DashboardLayout({ children, title, sidebarOptions }) {
   return (
     <>
       <Head>
@@ -12,7 +12,7 @@ export default function DashboardLayout({ children, title }) {
       </Head>
       <MenuAppBar />
       <div className={styles.container}>
-        <Sidebar className={styles.sidebar} />
+        <Sidebar className={styles.sidebar} options={sidebarOptions} />
         <main className={styles.main}>{children}</main>
       </div>
       <Footer />
