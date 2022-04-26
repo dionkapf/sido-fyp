@@ -20,21 +20,6 @@ export async function getServerSideProps() {
     const branch = branches.find((branch) => branch.id == item.branch);
     const branch_name = branch ? branch.name : "NOT FOUND";
     const role = item.role == 4 ? "Loan Manager" : "BD Officer";
-    const phone_number =
-      item.phone_number[0] == "0" ? (
-        <a href={`tel:+255${item.phone_number.slice(1)}`}>
-          $
-          {"+255 " +
-            item.phone_number
-              .slice(1)
-              .match(/.{1,3}/g)
-              .join(" ")}
-        </a>
-      ) : (
-        <a href="tel:${item.phone_number}">
-          ${item.phone_number.match(/.{1,3}/g).join(" ")}
-        </a>
-      );
 
     return {
       "S/N": index++,
