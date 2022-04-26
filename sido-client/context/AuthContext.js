@@ -16,13 +16,17 @@ export const AuthContextProvider = ({ children, session }) => {
   const checkLogin = () => {
     console.log("AuthContextProvider checkLogin");
     setIsLoading(true);
-    sessionUser.current = JSON.parse(localStorage.getItem("user"));
-    if (sessionUser.current) {
+    console.log(localStorage.getItem("user"));
+    try {
+      sessionUser.current = JSON.parse(localStorage.getItem("user"));
       console.log("User exists");
       setUser(sessionUser.current);
       setIsLoading(false);
+    } catch (error) {
+      console.log("User does not exist");
+      setIsLoading(false);
+      console.log("AuthContextProvider sessionUser", sessionUser.current);
     }
-    console.log("AuthContextProvider sessionUser", sessionUser.current);
   };
 
   console.log("sessionUser", sessionUser.current);
