@@ -43,7 +43,7 @@ export async function getServerSideProps() {
   const description =
     list.length == 1
       ? "loan manager/BD officer"
-      : "loan managers and business development officers";
+      : "loan managers and BD officers";
   return { props: { list, title, description } };
 }
 

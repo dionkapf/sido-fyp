@@ -59,21 +59,25 @@ export async function getServerSideProps() {
   const userCount = userCountRes.data;
   const execCount = execCountRes.data;
   const opsCount = opsCountRes.data;
+  const userDesc =
+    userCount == 1 ? "registered end user" : "registered end users";
+  const execDesc = execCount == 1 ? "executive" : "executives";
+  const opsDesc = opsCount == 1 ? "operations user" : "operations users";
   const users = {
     title: "Users",
-    description: "registered end users",
+    description: userDesc,
     link: "/admin/users",
     count: userCount,
   };
   const executives = {
     title: "Executive Users",
-    description: "executives",
+    description: execDesc,
     link: "/admin/executive-users",
     count: execCount,
   };
   const operators = {
     title: "Operations Users",
-    description: "loan managers and business development officers",
+    description: opsDesc,
     link: "/admin/operations-users",
     count: opsCount,
   };
