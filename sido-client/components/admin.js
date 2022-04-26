@@ -55,6 +55,13 @@ export default function Admin({ list, title, description, options }) {
                         {column}
                       </StyledTableCell>
                     );
+                  else if (column === "Actions")
+                    return (
+                      <StyledTableCell
+                        align="left"
+                        key={column}
+                      ></StyledTableCell>
+                    );
                   else
                     return (
                       <StyledTableCell align="right" key={column}>
