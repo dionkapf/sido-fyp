@@ -12,9 +12,6 @@ import Container from "@material-ui/core/Container";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
 
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -49,20 +46,35 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = JSON.stringify({ username, password });
-    const response = await fetch("http://localhost:5000/login", {
+    const response = await fetch(`http://localhost:5000/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: data,
     });
     const { user: resUser } = await response.json();
-    // @TODO: Create cookie for refresh cookie here
-    // @TODO: Save user to recoil
     console.log("User from res", resUser);
     localStorage.setItem("user", JSON.stringify(resUser));
     setUser(resUser);
     setIsLoading(false);
     console.log("User after login", user);
+    switch (resUser.role) {
+      case 1:
+        router.push("/admin");
+        break;
+      case 2:
+      case 3:
+        router.push("/executive");
+        break;
+
+      case 4:
+      case 5:
+        router.push("/operation");
+      case 6:
+      default:
+        router.push("/");
+        break;
+    }
     await router.push("/hello");
   };
 
