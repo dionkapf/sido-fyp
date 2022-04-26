@@ -47,11 +47,11 @@ export async function getServerSideProps() {
       Actions: [
         {
           name: "Edit",
-          url: `/admin/executive-users/${item.id}`,
+          url: `/admin/operations-users/${item.id}`,
         },
         {
           name: "Delete",
-          url: `/admin/executive-users/${item.id}/delete`,
+          url: `/admin/operations-users/${item.id}/delete`,
         },
       ],
     };
