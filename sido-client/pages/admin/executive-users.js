@@ -8,7 +8,6 @@ export async function getServerSideProps() {
   const branches = branches_raw.data;
   const data = await res.json();
   const title = "Executive Users";
-  const description = "executive users";
   let index = 1;
   const list = data.data.map((item) => {
     const full_name = `${item.first_name} ${item.last_name}`;
@@ -21,7 +20,6 @@ export async function getServerSideProps() {
     const branch_name = branch ? branch.name : "NOT FOUND";
     const role =
       item.role == 2 ? "Financial Services Manager" : "Training Manager";
-
     return {
       "S/N": index++,
       Name: full_name,
@@ -42,7 +40,7 @@ export async function getServerSideProps() {
       ],
     };
   });
-
+  const description = list.length == 1 ? "executives" : "executive";
   return { props: { list, title, description } };
 }
 

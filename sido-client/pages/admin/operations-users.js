@@ -8,7 +8,6 @@ export async function getServerSideProps() {
   const branches = branches_raw.data;
   const data = await res.json();
   const title = "Operation Users";
-  const description = "loan managers and business development officers";
   let index = 1;
   const list = data.data.map((item) => {
     const full_name = `${item.first_name} ${item.last_name}`;
@@ -41,7 +40,10 @@ export async function getServerSideProps() {
       ],
     };
   });
-
+  const description =
+    list.length == 1
+      ? "loan manager/BD officer"
+      : "loan managers and business development officers";
   return { props: { list, title, description } };
 }
 
