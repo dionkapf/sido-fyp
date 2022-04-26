@@ -17,7 +17,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-export default function Admin({ list, title, description }) {
+export default function Admin({ list, title, description, options }) {
   const columns = [];
   const colNames = [];
   const indices = [...Array(list.length).keys()];
@@ -30,7 +30,7 @@ export default function Admin({ list, title, description }) {
     columns.push(newKey);
   }
   return (
-    <DashboardLayout title={title}>
+    <DashboardLayout title={title} sidebarOptions={options}>
       <main className={styles.main}>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.subtitle}>
