@@ -5,52 +5,60 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
+    maxWidth: 450,
   },
   title: {
-    fontSize: 14,
+    fontSize: 50,
+  },
+  subtitle: {
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    margin: "0",
+  },
+  toright: {
+    textAlign: "right",
+  },
+  result: {
+    fontSize: 100,
+    lineHeight: 1,
   },
   pos: {
     marginBottom: 12,
   },
 });
 
-export default function SimpleCard() {
+export default function SimpleCard({ data }) {
+  const { title, description, link, count } = data;
+  console.log("Link: ", link);
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const router = useRouter();
 
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Word of the Day
-        </Typography>
-        <Typography variant="h5" component="h2">
-          be{bull}nev{bull}o{bull}lent
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography>
-        <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
+        <Typography className={classes.title}>{title}</Typography>
+        <div className={classes.subtitle}>
+          <Typography className={classes.result}>{count}</Typography>
+          <Typography className={classes.toright} variant="h6" component="p">
+            {description}
+          </Typography>
+        </div>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button
+          onClick={() => {
+            router.push(`${link}`);
+          }}
+          size="medium"
+        >
+          DETAILS
+        </Button>
       </CardActions>
     </Card>
   );
