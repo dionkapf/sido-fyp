@@ -69,6 +69,12 @@ const getOwners = (req, res) => {
         []
       )
       .then((owner_data) => {
+        if (req.query.count !== undefined) {
+          const count = owner_data.rows.length;
+          console.log("Count", count);
+          res.status(200).json({ success: true, data: count });
+          return;
+        }
         if (owner_data.rowCount > 0) {
           owner_data.rows.forEach((owner) => {
             const sector = sectors.find((sector) => sector.id == owner.sector);

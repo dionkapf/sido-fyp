@@ -87,6 +87,12 @@ const getUsers = (req, res) => {
       []
     )
     .then((user_data) => {
+      if (req.query.count !== undefined) {
+        const count = user_data.rows.length;
+        console.log("Count", count);
+        res.status(200).json({ success: true, data: count });
+        return;
+      }
       res.status(200).json({ success: false, data: user_data.rows });
     })
     .catch((error) => {
@@ -94,9 +100,65 @@ const getUsers = (req, res) => {
     });
 };
 
+const getOperators = async (req, res) => {
+  const users = await new Model(`"user"`).select(
+    `"user".id AS id, "user".name AS name, "user".role AS role`,
+    "",
+    [4, 5],
+    ["WHERE role=$1 OR role=$2"]
+  );
+  if (req.query.count !== undefined) {
+    const count = users.rows.length;
+    console.log("Count", count);
+    res.status(200).json({ success: true, data: count });
+    return;
+  }
+  const user_details_promise = await users.rows.map(async (user) => {
+    return await getUserDetails(user.id, user.role);
+  });
+  const user_details = await Promise.all(user_details_promise);
+  console.log("User details: ", user_details);
+  const data = users.rows.map((user, index) => {
+    return {
+      ...user,
+      ...user_details[index],
+    };
+  });
+  res.status(200).json({ success: true, data });
+};
+
+const getExecutives = async (req, res) => {
+  const users = await new Model(`"user"`).select(
+    `"user".id AS id, "user".name AS name, "user".role AS role`,
+    "",
+    [2, 3],
+    ["WHERE role=$1 OR role=$2"]
+  );
+  if (req.query.count !== undefined) {
+    const count = users.rows.length;
+    console.log("Count", count);
+    res.status(200).json({ success: true, data: count });
+    return;
+  }
+  const user_details_promise = await users.rows.map(async (user) => {
+    return await getUserDetails(user.id, user.role);
+  });
+  const user_details = await Promise.all(user_details_promise);
+  console.log("User details: ", user_details);
+  const data = users.rows.map((user, index) => {
+    return {
+      ...user,
+      ...user_details[index],
+    };
+  });
+  res.status(200).json({ success: true, data });
+};
+
 module.exports = {
   getUser,
   getUsers,
+  getExecutives,
+  getOperators,
   createUser,
   getUserDetails,
   USER_ROLE,

@@ -49,6 +49,12 @@ const getStaffs = (req, res) => {
           new Model("staff")
             .select(`*`, "", [], [])
             .then((staff_data) => {
+              if (req.query.count !== undefined) {
+                const count = staff_data.rows.length;
+                console.log("Count", count);
+                res.status(200).json({ success: true, data: count });
+                return;
+              }
               if (staff_data.rowCount > 0) {
                 staff_data.rows.forEach((staff) => {
                   const branch = branches.find(
