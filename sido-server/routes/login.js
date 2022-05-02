@@ -9,7 +9,7 @@ const {
   validateToken,
 } = require("../middleware/auth");
 
-router.route("/me").get(authenticateToken, getCurrentUser);
+router.route("/me").get(getCurrentUser);
 router.route("/validate").get(validateToken);
 
 router
