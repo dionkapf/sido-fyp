@@ -16,14 +16,24 @@ export default function MyApp(props) {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
-    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(localStorage.getItem("user"));
+    function IsJsonString(str) {
+      try {
+        var json = JSON.parse(str);
+        return typeof json === "object";
+      } catch (e) {
+        return false;
+      }
+    }
+    const user = IsJsonString(localStorage.getItem("user"))
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
     sessionUser.current = user;
     console.log("sessionUser", sessionUser.current);
     if (user) {
       if (user.accessToken) {
         console.log("User has access token");
-        // @TODO - Check if the user access token is still valid
-        fetch("http://localhost:5000/login/validate", {
+        fetch(`http://localhost:5000/login/validate`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
