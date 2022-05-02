@@ -63,8 +63,10 @@ export default function SignIn() {
         router.push("/admin");
         break;
       case 2:
+        router.push("/executive/fsm");
+        break;
       case 3:
-        router.push("/executive");
+        router.push("/executive/training");
         break;
 
       case 4:
