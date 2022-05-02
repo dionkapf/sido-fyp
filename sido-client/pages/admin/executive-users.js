@@ -44,16 +44,8 @@ export async function getServerSideProps() {
   return { props: { list, title, description } };
 }
 
-export default function ExecutiveUsers({
-  list,
-  title,
-  description,
-  branches,
-  data,
-}) {
+export default function ExecutiveUsers({ list, title, description }) {
   console.log("list", list);
-  // console.log("branches", branches);
-  // console.log("data", data);
   return (
     <Admin
       list={list}
