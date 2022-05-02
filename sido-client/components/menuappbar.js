@@ -87,7 +87,7 @@ export default function MenuAppBar() {
     setUser(null);
     localStorage.removeItem("user");
     setIsLoading(true);
-    await Router.push("/login");
+    await Router.push("/");
   };
   const handleLogIn = async (event) => {
     await Router.push("/login");
@@ -138,7 +138,7 @@ export default function MenuAppBar() {
               </Menu>
             </div>
           )}
-          {!user && !isLoginPage && !isLoading && (
+          {!user && !isLoginPage && (
             <div>
               <IconButton
                 aria-label="account of current user"
