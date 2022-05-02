@@ -135,14 +135,15 @@ const loginUser = async (req, res) => {
               username: user.name,
               role: user.role,
               ...user_details,
-              accessToken,
               refreshToken,
             };
             res.setHeader("Authorization", "Bearer " + accessToken);
-            res.cookie("accessToken", user_data.accessToken, {
+            console.log("AT: ", accessToken);
+            res.cookie("accessToken", accessToken, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
             });
+            console.log("Accesstoken", req.cookies);
             res.cookie("refreshToken", user_data.refreshToken, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
@@ -165,10 +166,13 @@ const loginUser = async (req, res) => {
 async function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+  const cookies = req.headers.cookie;
+  console.log("Cookies: ", cookies);
+  console.log("Token: ", token);
   if (token == null)
     return res
       .status(401)
-      .json({ success: false, message: "Unauthorized access" });
+      .json({ success: false, message: "Unauthorized access", token });
   jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
@@ -182,7 +186,7 @@ async function authenticateToken(req, res, next) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
           });
-          req.headers["authorization"] = `Bearer ${accessToken}`;
+          res.setHeader("Authorization", "Bearer " + accessToken);
           return next();
         } else {
           return res
@@ -253,8 +257,8 @@ function authorizeExecutive(req, res, next) {
 }
 
 const getCurrentUser = async (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const accessToken = authHeader && authHeader.split(" ")[1];
+  const accessToken = req.cookies.accessToken;
+  console.log("Access token: ", accessToken);
   try {
     const { id, username, role, exp } = jwt.decode(accessToken);
     const user = await getUserDetails(id, role);
@@ -274,6 +278,7 @@ const getCurrentUser = async (req, res) => {
     }
   } catch (error) {
     if (error.message === "jwt expired") console.log("Expireed bitch");
+    console.log("Error: ", error);
   }
 };
 
