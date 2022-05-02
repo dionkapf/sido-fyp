@@ -4,16 +4,13 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { useAuth } from "../context/AuthContext";
 import Router, { useRouter } from "next/router";
-import {
-  useRecoilState,
-  useRecoilValue_TRANSITION_SUPPORT_UNSTABLE,
-} from "recoil";
-import { userState, authState } from "../stores/states";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,12 +21,23 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    borderRadius: "0px",
+  },
+  homeLink: {
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      color: "white",
+    },
   },
 }));
 
 export default function MenuAppBar() {
   const classes = useStyles();
   const { user, setUser } = useAuth();
+  const role = user ? user.role : null;
   const { isLoading, setIsLoading } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -37,6 +45,24 @@ export default function MenuAppBar() {
   const isLoginPage = router.pathname === "/login";
   console.log("Navbar user", user);
   console.log("Navbar isLoginPage", isLoginPage);
+  const homeHref = (role) => {
+    console.log("Navbar homeHref", role);
+    switch (role) {
+      case 1:
+        return "/admin";
+
+      case 2:
+      case 3:
+        return "/executive";
+
+      case 4:
+      case 5:
+        return "/operation";
+
+      default:
+        return "/";
+    }
+  };
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -48,6 +74,12 @@ export default function MenuAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleProfile = async () => {
+    const res = await fetch("http://localhost:5000/login/me");
+    const data = await res.json();
+    console.log("data", data);
   };
 
   const handleLogOut = async (event) => {
@@ -64,13 +96,15 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            SIDO APP
+          <Typography className={classes.title}>
+            <Link href={homeHref(role)} passHref>
+              <a className={classes.homeLink}>SIDO APP</a>
+            </Link>
           </Typography>
 
           {user && !isLoginPage && !isLoading && (
             <div>
-              <IconButton
+              <Button
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
@@ -79,9 +113,11 @@ export default function MenuAppBar() {
               >
                 <AccountCircle />
                 <Typography variant="h6" className={classes.title}>
-                  {user.first_name + " " + user.last_name}
+                  {user.first_name === "Administrator"
+                    ? "Administrator"
+                    : user.first_name + " " + user.last_name}
                 </Typography>
-              </IconButton>
+              </Button>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -97,12 +133,12 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
               </Menu>
             </div>
           )}
-          {!user && !isLoginPage && isLoading && (
+          {!user && !isLoginPage && !isLoading && (
             <div>
               <IconButton
                 aria-label="account of current user"
