@@ -52,10 +52,12 @@ export default function MenuAppBar() {
         return "/admin";
 
       case 2:
+        return "/executive/fsm";
       case 3:
-        return "/executive";
+        return "/executive/training";
 
       case 4:
+        return "/operation";
       case 5:
         return "/operation";
 
@@ -77,7 +79,9 @@ export default function MenuAppBar() {
   };
 
   const handleProfile = async () => {
-    const res = await fetch("http://localhost:5000/login/me");
+    const res = await fetch("http://localhost:5000/login/me", {
+      credentials: "include",
+    });
     const data = await res.json();
     console.log("data", data);
   };
