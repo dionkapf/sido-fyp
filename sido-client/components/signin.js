@@ -75,7 +75,6 @@ export default function SignIn() {
         router.push("/");
         break;
     }
-    await router.push("/hello");
   };
 
   return (
