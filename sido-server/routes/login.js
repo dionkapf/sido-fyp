@@ -7,10 +7,12 @@ const {
   authenticateToken,
   refreshAccessToken,
   validateToken,
+  checkAccessToken,
 } = require("../middleware/auth");
 
 router.route("/me").get(getCurrentUser);
 router.route("/validate").get(validateToken);
+router.route("/token").get(checkAccessToken);
 
 router
   .route("/")

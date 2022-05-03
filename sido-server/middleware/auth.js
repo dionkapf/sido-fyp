@@ -141,10 +141,10 @@ const loginUser = async (req, res) => {
             console.log("AT: ", accessToken);
             res.cookie("accessToken", accessToken, {
               httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
+              // secure: process.env.NODE_ENV === "production",
             });
             console.log("Accesstoken", req.cookies);
-            res.cookie("refreshToken", user_data.refreshToken, {
+            res.cookie("refreshToken", refreshToken, {
               httpOnly: true,
               secure: process.env.NODE_ENV === "production",
             });
@@ -204,6 +204,37 @@ async function authenticateToken(req, res, next) {
   });
 }
 
+async function checkAccessToken(req, res, next) {
+  const accessToken = req.cookies.accessToken;
+  console.log("Access token: ", accessToken);
+  if (!accessToken) {
+    return res.status(403).json({
+      success: false,
+      message: "No Access token provided",
+    });
+  }
+  jwt.verify(accessToken, process.env.JWT_SECRET, async (err, user) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        console.log("Token has expired");
+        res.clearCookie("accessToken");
+        res.status(403).json({
+          success: false,
+          message: "Access token has expired",
+        });
+      } else {
+        console.log("Error: ", err.name);
+        res.status(403).json({
+          success: false,
+          message: "Bad token",
+        });
+      }
+    } else {
+      res.status(200).json({ success: true, message: "Access token is valid" });
+    }
+  });
+}
+
 function authorizeUserHandler(user, validRoles) {
   if (!user) {
     return false;
@@ -259,6 +290,7 @@ function authorizeExecutive(req, res, next) {
 const getCurrentUser = async (req, res) => {
   const accessToken = req.cookies.accessToken;
   console.log("Access token: ", accessToken);
+  console.log("REQ: ", req);
   try {
     const { id, username, role, exp } = jwt.decode(accessToken);
     const user = await getUserDetails(id, role);
@@ -266,13 +298,15 @@ const getCurrentUser = async (req, res) => {
     if (!user) {
       console.log("No user?");
     } else {
+      delete user.user_id;
+      delete user.id;
+      console.log("User: ", user);
       res.status(200).json({
         success: true,
         message: "User details retrieved successfully",
         user: {
           username,
           ...user,
-          accessToken,
         },
       });
     }
@@ -427,4 +461,5 @@ module.exports = {
   authorizeAdmin,
   authorizeOperations,
   authorizeExecutive,
+  checkAccessToken,
 };
