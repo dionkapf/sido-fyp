@@ -23,11 +23,22 @@ const getUserDetails = async (id, role) => {
     role === USER_ROLE.TRAINING ||
     role === USER_ROLE.BUSINESS
   ) {
-    await getStaffByUserId(id).then((staff_data) => {
-      user = staff_data;
+    await getStaffByUserId(id).then(async (staff_data) => {
+      const roles = await new Model(`"role"`).select(
+        `"role".name AS name`,
+        "",
+        [role],
+        ["WHERE id = $1"]
+      );
+      const role_name = roles.rows[0].name;
+      user = {
+        role_name,
+        ...staff_data,
+      };
     });
   } else {
     user = await getOwnerByUserId(id);
+    console.log("Owner: ", user);
   }
   return user;
 };

@@ -119,7 +119,7 @@ const getOwnerByUserId = async (id) => {
     owners.rows.forEach((owner) => {
       const sector = sectors.find((sector) => sector.id == owner.sector);
       owner.sector_id = owner.sector;
-      delete owner.sector;
+      owner.sector = sector.name;
     });
     return owners.rows[0];
   } else {
