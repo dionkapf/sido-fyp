@@ -13,7 +13,7 @@ const getRole = (req, res) => {
       ["WHERE id = $1"]
     )
     .then((role_data) => {
-      res.status(200).json({ success: true, data: role_data.rows });
+      res.status(200).json({ success: true, data: role_data.rows[0] });
     })
     .catch((error) => {
       console.log(error);

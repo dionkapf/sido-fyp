@@ -13,7 +13,7 @@ const getSector = (req, res) => {
       ["WHERE id = $1"]
     )
     .then((sector_data) => {
-      res.status(200).json({ success: true, data: sector_data.rows });
+      res.status(200).json({ success: true, data: sector_data.rows[0] });
     })
     .catch((error) => {
       console.log(error);
