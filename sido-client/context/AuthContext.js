@@ -13,15 +13,26 @@ export const AuthContextProvider = ({ children, session }) => {
     checkLogin();
   }, []);
 
-  const checkLogin = () => {
+  const checkLogin = async () => {
     console.log("AuthContextProvider checkLogin");
     setIsLoading(true);
-    console.log(localStorage.getItem("user"));
     try {
-      sessionUser.current = JSON.parse(localStorage.getItem("user"));
-      console.log("User exists");
-      setUser(sessionUser.current);
-      setIsLoading(false);
+      const checkSessionRes = await fetch(`http://localhost:5000/login/token`, {
+        credentials: "include",
+      });
+      const checkSession = await checkSessionRes.json();
+      console.log("CheckSession", checkSession);
+      if (checkSession.success) {
+        sessionUser.current = JSON.parse(localStorage.getItem("user"));
+        console.log("User logged in");
+        setUser(sessionUser.current);
+        setIsLoading(false);
+      } else {
+        console.log("User not logged in");
+        localStorage.removeItem("user");
+        setIsLoading(false);
+        console.log("AuthContextProvider sessionUser", sessionUser.current);
+      }
     } catch (error) {
       console.log("User does not exist");
       setIsLoading(false);
