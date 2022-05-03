@@ -3,7 +3,6 @@ import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import Footer from "../components/footer";
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useRef } from "react";
 import MenuAppBar from "../components/menuappbar";
 
 export default function Home() {
@@ -11,10 +10,9 @@ export default function Home() {
   const name = user
     ? `Welcome back, ${user.first_name}`
     : "Welcome to the SIDO APP";
-  const formalized = true;
-  useEffect(() => {
-    // console.log("Formalized", user.formalized);
-  }, [name, user]);
+      
+
+
   return (
     <div className={styles.container}>
       <Head>
