@@ -36,3 +36,6 @@ yarn-error.log*
 
 # IDE
 /.vscode
+
+# Dev data
+sample_users.json

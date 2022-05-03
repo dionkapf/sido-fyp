@@ -43,6 +43,7 @@ export default function MenuAppBar() {
   const open = Boolean(anchorEl);
   const router = useRouter();
   const isLoginPage = router.pathname === "/login";
+  const isAdmin = role === 1;
   console.log("Navbar user", user);
   console.log("Navbar isLoginPage", isLoginPage);
   const homeHref = (role) => {
@@ -79,11 +80,51 @@ export default function MenuAppBar() {
   };
 
   const handleProfile = async () => {
-    const res = await fetch("http://localhost:5000/login/me", {
+    const getUsers = await fetch("http://localhost:5000/login/me", {
       credentials: "include",
     });
-    const data = await res.json();
-    console.log("data", data);
+    const userRes = await getUsers.json();
+    const userDetails = userRes.user;
+    userDetails.role = parseInt(user.role);
+    console.log("Navbar userDetails", userDetails);
+    if (user.role === 6) {
+      console.log("Getting sector...");
+      const [getRole, getSectors] = await Promise.all([
+        fetch(`http://localhost:5000/api/roles/${userDetails.role}`),
+        fetch(`http://localhost:5000/api/sectors/${userDetails.sector_id}`),
+      ]);
+      const [roleResponse, sectorResponse] = await Promise.all([
+        getRole.json(),
+        getSectors.json(),
+      ]);
+      const sector = sectorResponse.data;
+      const role = roleResponse.data;
+      userDetails.role_id = userDetails.role;
+      userDetails.role = role.name;
+      userDetails.sector = sector.name;
+      delete userDetails.sector_id;
+      delete userDetails.username;
+    }
+    if (user.role in [2, 3, 4, 5]) {
+      const [getRole, getBranch] = await Promise.all([
+        fetch(`http://localhost:5000/api/roles/${userDetails.role}`),
+        fetch(`http://localhost:5000/api/branches/${userDetails.branch}`),
+      ]);
+      const [roleResponse, branchResponse] = await Promise.all([
+        getRole.json(),
+        getBranch.json(),
+      ]);
+      console.log("Branches", branchResponse);
+      const role = roleResponse.data;
+      const branch = branchResponse.data;
+      userDetails.role_id = userDetails.role;
+      userDetails.role = role.name;
+      userDetails.branch = branch.name;
+      delete userDetails.branch_id;
+      delete userDetails.username;
+    }
+    console.log("Menubar to Profile user: ", userDetails);
+    await Router.push("/profile");
   };
 
   const handleLogOut = async (event) => {
@@ -137,7 +178,9 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                {!isAdmin && (
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                )}
                 <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
               </Menu>
             </div>
