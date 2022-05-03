@@ -8,7 +8,6 @@ import MenuAppBar from "../components/menuappbar";
 
 export default function Home() {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to the SIDO APP");
   const name = user
     ? `Welcome back, ${user.first_name}`
     : "Welcome to the SIDO APP";
@@ -39,14 +38,17 @@ export default function Home() {
               </div>
             </Link>
           </div>
-
-          <a href="/form-request" className={styles.card}>
-            <h2>Rasmilishe  &rarr;</h2>
-            <p>
-              Start the process of formalizing your business and earn your
-              rights
-            </p>
-          </a>
+          <div className={styles.card}>
+            <Link href="/form-request" passHref className={styles.card}>
+              <div>
+                <h2>Rasmilishe &rarr;</h2>
+                <p>
+                  Start the process of formalizing your business and earn your
+                  rights
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
       </main>
 
