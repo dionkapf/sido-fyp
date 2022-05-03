@@ -80,6 +80,14 @@ export default function ProfilePanel({ user }) {
       year: "numeric",
       month: "long",
     });
+    const phone_number =
+      user.phone_number[0] == "0"
+        ? "+255 " +
+          user.phone_number
+            .slice(1)
+            .match(/.{1,3}/g)
+            .join(" ")
+        : user.phone_number.match(/.{1,3}/g).join(" ");
     userData = [
       {
         label: "Full Name",
@@ -99,7 +107,7 @@ export default function ProfilePanel({ user }) {
       },
       {
         label: "Phone",
-        value: user.phone_number,
+        value: phone_number,
       },
       {
         label: "Date of Birth",
@@ -116,6 +124,14 @@ export default function ProfilePanel({ user }) {
       year: "numeric",
       month: "long",
     });
+    const phone_number =
+      user.phone_number[0] == "0"
+        ? "+255 " +
+          user.phone_number
+            .slice(1)
+            .match(/.{1,3}/g)
+            .join(" ")
+        : user.phone_number.match(/.{1,3}/g).join(" ");
     const userSex = (sex) => {
       switch (sex) {
         case "M":
@@ -152,7 +168,7 @@ export default function ProfilePanel({ user }) {
       },
       {
         label: "Phone",
-        value: user.phone_number,
+        value: phone_number,
       },
     ];
     businessData = [
