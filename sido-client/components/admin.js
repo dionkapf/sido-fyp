@@ -115,6 +115,12 @@ export default function Admin({ list, title, description, options }) {
                             <a href={`mailto:${row[column]}`}>{row[column]}</a>
                           </TableCell>
                         );
+                      case "Loanee":
+                        return (
+                          <TableCell align="right" key={column}>
+                            <a href={`#`}>{row[column]}</a>
+                          </TableCell>
+                        );
                       case "Actions":
                         const actions = row[column];
                         return (
