@@ -2,48 +2,42 @@ import Admin from "../../../components/admin";
 import { fsmOptions } from "./index";
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:5000/api/staff/operators`);
-  const branches_res = await fetch(`http://localhost:5000/api/branches`);
-  const branches_raw = await branches_res.json();
-  const branches = branches_raw.data;
+  const res = await fetch(`http://localhost:5000/api/loan-requests`);
   const data = await res.json();
   const title = "Loan Applications";
   let index = 1;
   const list = data.data.map((item) => {
-    const full_name = `${item.first_name} ${item.last_name}`;
-    const birthday = new Date(item.birthdate).toLocaleString("en-gb", {
+    const amountNumber = item.amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const amount = `TSh. ${amountNumber}`;
+    const requestDate = new Date(item.request_date).toLocaleString("en-gb", {
       day: "numeric",
       year: "numeric",
       month: "long",
     });
-    const branch = branches.find((branch) => branch.id == item.branch);
-    const branch_name = branch ? branch.name : "NOT FOUND";
-    const role = item.role == 4 ? "Loan Manager" : "BD Officer";
 
     return {
       "S/N": index++,
-      Name: full_name,
-      Email: item.email,
-      Phone: item.phone_number,
-      Birthday: birthday,
-      Branch: branch_name,
-      Role: role,
+      Loanee: item.loanee,
+      Branch: item.branch.name,
+      "Amount Requested": amount,
+      "Date of Requested": requestDate,
+      Status: item.status,
       Actions: [
         {
-          name: "Edit",
-          url: `/admin/operations-users/${item.id}`,
+          name: "ACCEPT",
+          url: `#`,
         },
         {
-          name: "Delete",
-          url: `/admin/operations-users/${item.id}/delete`,
+          name: "REJECT",
+          url: `#`,
         },
       ],
     };
   });
   const description =
-    list.length == 1
-      ? "loan manager/BD officer"
-      : "loan managers and BD officers";
+    list.length == 1 ? "loan application" : "loan applications";
   return { props: { list, title, description } };
 }
 

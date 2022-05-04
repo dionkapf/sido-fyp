@@ -28,9 +28,10 @@ export default function Admin({ list }) {
   const router = useRouter();
   useEffect(() => {
     if (!user) {
-      console.log("Admin user", user);
+      console.log("FSM user", user);
       router.push("/login");
     } else if (user.role !== 2) {
+      console.log("Wrong user", user);
       router.push("/");
     }
   }, [router, user]);
@@ -46,44 +47,80 @@ export default function Admin({ list }) {
 }
 
 export async function getServerSideProps() {
-  const [userCountRes, executiveCountRes, operationCountRes] =
-    await Promise.all([
-      fetch("http://localhost:5000/api/owners?count"),
-      fetch("http://localhost:5000/api/staff/executives?count"),
-      fetch("http://localhost:5000/api/staff/operators?count"),
-    ]);
-  const [userCountJSON, executiveCountJSON, operationCountJSON] =
-    await Promise.all([
-      userCountRes.json(),
-      executiveCountRes.json(),
-      operationCountRes.json(),
-    ]);
+  const [
+    requestCountRes,
+    loansCountRes,
+    managerCountRes,
+    requestAmountRes,
+    paidAmountRes,
+  ] = await Promise.all([
+    fetch("http://localhost:5000/api/loan-requests?count"),
+    fetch("http://localhost:5000/api/repayments?count"),
+    fetch("http://localhost:5000/api/staff/operators?count&role=4"),
+    fetch("http://localhost:5000/api/loan-requests?amount"),
+    fetch("http://localhost:5000/api/repayments?amount"),
+  ]);
+  const [
+    requestCountJSON,
+    loansCountJSON,
+    managerCountJSON,
+    requestAmountJSON,
+    paidAmountJSON,
+  ] = await Promise.all([
+    requestCountRes.json(),
+    loansCountRes.json(),
+    managerCountRes.json(),
+    requestAmountRes.json(),
+    paidAmountRes.json(),
+  ]);
 
-  const userCount = userCountJSON.data;
-  const execCount = executiveCountJSON.data;
-  const opsCount = operationCountJSON.data;
-  const userDesc =
-    userCount == 1 ? "registered end user" : "registered end users";
-  const execDesc = execCount == 1 ? "executive" : "executives";
-  const opsDesc = opsCount == 1 ? "operations user" : "operations users";
-  const users = {
-    title: "Users",
-    description: userDesc,
-    link: "/admin/users",
-    count: userCount,
+  const formatMoney = (amount) => {
+    const amountNumber = amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return `TSh. ${amountNumber}`;
   };
-  const executives = {
-    title: "Executive Users",
-    description: execDesc,
-    link: "/admin/executive-users",
-    count: execCount,
+
+  const requestCount = requestCountJSON.data;
+  const loansCount = loansCountJSON.data;
+  const managerCount = managerCountJSON.data;
+  const requestAmount = formatMoney(requestAmountJSON.data);
+  const paidAmount = formatMoney(paidAmountJSON.data);
+  const requestDesc =
+    requestCount == 1 ? "loan application" : "loan applications";
+  const loansDesc = loansCount == 1 ? "repayment" : "repayments";
+  const managerDesc = managerCount == 1 ? "loan manager" : "loan managers";
+  const requestAmountDesc = "requested";
+  const paidAmountDesc = "paid";
+  const requests = {
+    title: "Loan Applications",
+    description: requestDesc,
+    link: "/executive/fsm/loan-apps",
+    count: requestCount,
   };
-  const operators = {
+  const repayments = {
+    title: "Loan Repayments",
+    description: loansDesc,
+    link: "/executive/fsm/repayments",
+    count: loansCount,
+  };
+  const managers = {
     title: "Operations Users",
-    description: opsDesc,
-    link: "/admin/operations-users",
-    count: opsCount,
+    description: managerDesc,
+    link: "/executive/fsm/loan-managers",
+    count: managerCount,
   };
-  const list = { users, executives, operators };
+  const amountRequested = {
+    title: "Amount Requested",
+    description: requestAmountDesc,
+    count: requestAmount,
+  };
+  const amountPaid = {
+    title: "Amount Paid",
+    description: paidAmountDesc,
+    count: paidAmount,
+  };
+
+  const list = { requests, repayments, managers, amountRequested, amountPaid };
   return { props: { list } };
 }

@@ -2,32 +2,42 @@ import Admin from "../../../components/admin";
 import { fsmOptions } from "./index";
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:5000/api/staff/operators`);
-  const branches_res = await fetch(`http://localhost:5000/api/branches`);
-  const branches_raw = await branches_res.json();
-  const branches = branches_raw.data;
+  const res = await fetch(`http://localhost:5000/api/repayments`);
   const data = await res.json();
+  const repaymentsPromise = await data.data.map(async (repayment) => {
+    const loanee = repayment.request.loanee;
+    console.log("loanee", loanee);
+    const userRes = await fetch(`http://localhost:5000/api/owners/${loanee}`);
+    const userData = await userRes.json();
+    const user = userData.data;
+    return {
+      ...repayment,
+      loanee: user,
+    };
+  });
+  console.log("repaymentsPromise", repaymentsPromise);
   const title = "Loan Repayments";
   let index = 1;
-  const list = data.data.map((item) => {
-    const full_name = `${item.first_name} ${item.last_name}`;
-    const birthday = new Date(item.birthdate).toLocaleString("en-gb", {
+  const repayments = await Promise.all(repaymentsPromise);
+  console.log("repayments", repayments);
+  const list = repayments.map((item) => {
+    const amountNumber = item.amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const amount = `TSh. ${amountNumber}`;
+    const payDate = new Date(item.payment_date).toLocaleString("en-gb", {
       day: "numeric",
       year: "numeric",
       month: "long",
     });
-    const branch = branches.find((branch) => branch.id == item.branch);
-    const branch_name = branch ? branch.name : "NOT FOUND";
-    const role = item.role == 4 ? "Loan Manager" : "BD Officer";
 
     return {
       "S/N": index++,
-      Name: full_name,
-      Email: item.email,
-      Phone: item.phone_number,
-      Birthday: birthday,
-      Branch: branch_name,
-      Role: role,
+      Loan: item.loan,
+      Loanee: `${item.loanee.first_name} ${item.loanee.last_name}`,
+      "Payment Date": payDate,
+      "Receipt Number": item.receipt_number,
+      "Amount Paid": amount,
       Actions: [
         {
           name: "Edit",
@@ -40,10 +50,7 @@ export async function getServerSideProps() {
       ],
     };
   });
-  const description =
-    list.length == 1
-      ? "loan manager/BD officer"
-      : "loan managers and BD officers";
+  const description = list.length == 1 ? "loan repayment" : "loan repayments";
   return { props: { list, title, description } };
 }
 
