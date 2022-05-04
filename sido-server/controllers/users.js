@@ -24,15 +24,26 @@ const getUserDetails = async (id, role) => {
     role === USER_ROLE.BUSINESS
   ) {
     await getStaffByUserId(id).then(async (staff_data) => {
-      const roles = await new Model(`"role"`).select(
-        `"role".name AS name`,
-        "",
-        [role],
-        ["WHERE id = $1"]
-      );
+      console.log("Staff data: ", staff_data);
+      const [roles, branches] = await Promise.all([
+        new Model(`"role"`).select(
+          `"role".name AS name`,
+          "",
+          [role],
+          ["WHERE id = $1"]
+        ),
+        new Model(`"branch"`).select(
+          `"branch".name AS name`,
+          "",
+          [staff_data.branch],
+          ["WHERE id = $1"]
+        ),
+      ]);
       const role_name = roles.rows[0].name;
+      const branch_name = branches.rows[0].name;
       user = {
         role_name,
+        branch_name,
         ...staff_data,
       };
     });
@@ -119,7 +130,11 @@ const getOperators = async (req, res) => {
     ["WHERE role=$1 OR role=$2"]
   );
   if (req.query.count !== undefined) {
-    const count = users.rows.length;
+    if (req.query.role !== undefined) {
+      count = users.rows.filter((staff) => staff.role == req.query.role).length;
+    } else {
+      count = users.rows.length;
+    }
     console.log("Count", count);
     res.status(200).json({ success: true, data: count });
     return;
@@ -146,7 +161,11 @@ const getExecutives = async (req, res) => {
     ["WHERE role=$1 OR role=$2"]
   );
   if (req.query.count !== undefined) {
-    const count = users.rows.length;
+    if (req.query.role !== undefined) {
+      count = users.rows.filter((staff) => staff.role == req.query.role).length;
+    } else {
+      count = users.rows.length;
+    }
     console.log("Count", count);
     res.status(200).json({ success: true, data: count });
     return;
