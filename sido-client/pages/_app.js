@@ -16,7 +16,6 @@ export default function MyApp(props) {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
-    console.log(localStorage.getItem("user"));
     function IsJsonString(str) {
       try {
         var json = JSON.parse(str);
