@@ -34,7 +34,8 @@ const useStyles = makeStyles({
 });
 
 export default function SimpleCard({ data }) {
-  const { title, description, link, count } = data;
+  const { title, description, count } = data;
+  const link = data.link ? data.link : null;
   console.log("Link: ", link);
   const classes = useStyles();
   const router = useRouter();
@@ -51,14 +52,16 @@ export default function SimpleCard({ data }) {
         </div>
       </CardContent>
       <CardActions>
-        <Button
-          onClick={() => {
-            router.push(`${link}`);
-          }}
-          size="medium"
-        >
-          DETAILS
-        </Button>
+        {link && (
+          <Button
+            onClick={() => {
+              router.push(`${link}`);
+            }}
+            size="medium"
+          >
+            DETAILS
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
