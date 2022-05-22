@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useRef } from "react";
 import MenuAppBar from "../components/menuappbar";
 import LoanRequest from "../components/loan-request";
+import { makeStyles } from "@material-ui/core";
 
 export async function getServerSideProps() {
   const res = await fetch(`http://localhost:5000/api/branches`);
@@ -14,10 +15,26 @@ export async function getServerSideProps() {
   return { props: { branches } };
 }
 
+const useStyles = makeStyles((theme) => ({
+  main: {
+    minHeight: "75vh",
+    padding: "2rem 0",
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    padding: "0 0rem",
+  },
+}));
+
 export default function ApplyLoan({ branches }) {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
   const title = useRef("Welcome to the SIDO APP");
   const router = useRouter();
+  const classes = useStyles();
   const name = user
     ? `Welcome back, ${user.first_name}`
     : "Welcome to the SIDO APP";
@@ -29,17 +46,15 @@ export default function ApplyLoan({ branches }) {
     }
   }, [user, router]);
   return (
-    <div className={styles.container}>
+    <div className={classes.container}>
       <Head>
-        <title>SIDO APP</title>
+        <title>Loan Application</title>
         <meta name="description" content="SIDO Loan and Formalise App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />
-      <main className={styles.main}>
-        <h1 className={styles.title}>{name}</h1>
-
-        <p className={styles.description}>What would you like to do today?</p>
+      <main className={classes.main}>
+        <h1 className={styles.title}>Apply for a loan</h1>
         <LoanRequest branches={branches} />
       </main>
 

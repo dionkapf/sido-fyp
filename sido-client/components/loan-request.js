@@ -1,6 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -14,8 +15,9 @@ const validationSchema = Yup.object({
     .required("Required")
     .positive("Must be a positive number")
     .integer("Must be an integer")
-    .min(1, "Must be greater than 0")
-    .max(15000000, "Must be less than TSh 15 000 000"),
+    .min(100000, "Loans start at TSh 100 000")
+    .max(15000000, "You can only borrow up to TSh 15 000 000"),
+  branch: Yup.string().required("Required"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -23,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: "0.15rem solid",
-    borderColor: theme.palette.primary.main,
-    borderRadius: "10px",
     padding: "10px",
     "& > *": {
       margin: theme.spacing(1),
@@ -43,17 +42,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoanRequest({ branches }) {
   const classes = useStyles();
+  const router = useRouter();
   const { user, setUser, isLoading, setIsLoading } = useAuth();
   const ownerName = user ? `${user.first_name} ${user.last_name}` : "null";
+  const id = user ? user.id : "null";
   const formik = useFormik({
     initialValues: {
-      user: ownerName,
-      amount: "",
+      loanee: id,
       branch: "",
+      amount: "",
+      status: "pending",
     },
-    validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      const request = JSON.stringify(values, null, 2);
+      localStorage.setItem("loanRequest", request);
+      router.push("/register-collateral");
     },
   });
 
@@ -67,21 +71,22 @@ export default function LoanRequest({ branches }) {
         label="Business Owner"
         variant="outlined"
         onChange={formik.handleChange}
-        defaultValue={formik.values.user}
+        defaultValue={ownerName}
       />
       <TextField
         required
+        autoFocus
         id="amount"
         name="amount"
         label="Amount"
         variant="outlined"
         onChange={formik.handleChange}
         value={formik.values.amount}
-        InputProps={{
-          startAdornment: <InputAdornment position="start">TZS</InputAdornment>,
-        }}
         error={formik.touched.amount && Boolean(formik.errors.amount)}
-        helperText={formik.errors.amount}
+        helperText={formik.touched.amount && formik.errors.amount}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">TSh</InputAdornment>,
+        }}
       />
       <Select
         required
