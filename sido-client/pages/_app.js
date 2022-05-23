@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../theme";
 import { AuthContextProvider } from "../context/AuthContext";
+import { LoanRequestContextProvider } from "../context/LoanRequestContext";
 import { RecoilRoot } from "recoil";
 
 export default function MyApp(props) {
@@ -65,9 +66,11 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <RecoilRoot>
-          <AuthContextProvider session={sessionUser.current}>
-            <Component {...pageProps} />
-          </AuthContextProvider>
+          <LoanRequestContextProvider>
+            <AuthContextProvider session={sessionUser.current}>
+              <Component {...pageProps} />
+            </AuthContextProvider>
+          </LoanRequestContextProvider>
         </RecoilRoot>
       </ThemeProvider>
     </React.Fragment>

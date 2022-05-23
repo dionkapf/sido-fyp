@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
-import { useAuth } from "../context/AuthContext";
+import { useLoanRequest } from "../context/LoanRequestContext";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -39,7 +39,9 @@ const useStyles = makeStyles((theme) => ({
 export default function AddCollateral() {
   const classes = useStyles();
   const router = useRouter();
-  const { user, setUser, isLoading, setIsLoading } = useAuth();
+  const { loanRequest, setLoanRequest, collateral, setCollateral } =
+    useLoanRequest();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -48,11 +50,9 @@ export default function AddCollateral() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // alert("Success");
-      const loanRequest = JSON.parse(localStorage.getItem("loanRequest"));
-      loanRequest.collateral = values;
-      localStorage.setItem("loanRequest", JSON.stringify(loanRequest));
-      router.push("/loan-request-success");
+      setCollateral(values);
+      console.log("Collateral added", values);
+      router.push("/loan-request-confirm");
     },
   });
 

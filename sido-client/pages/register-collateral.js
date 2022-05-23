@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import Footer from "../components/footer";
 import { useAuth } from "../context/AuthContext";
+import { useLoanRequest } from "../context/LoanRequestContext";
 import { useEffect, useRef } from "react";
 import MenuAppBar from "../components/menuappbar";
 import AddCollateral from "../components/add-collateral";
@@ -31,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RegisterCollateral({ branches }) {
-  const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to the SIDO APP");
+  const { user } = useAuth();
+  const { loanRequest } = useLoanRequest();
   const router = useRouter();
   const classes = useStyles();
   useEffect(() => {

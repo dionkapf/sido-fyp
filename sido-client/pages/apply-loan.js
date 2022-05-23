@@ -40,6 +40,7 @@ export default function ApplyLoan({ branches }) {
     : "Welcome to the SIDO APP";
   const formalized = true;
   useEffect(() => {
+    console.log("USe effect user", user);
     if (!user) {
       console.log("User is not logged in");
       router.push("/login");
