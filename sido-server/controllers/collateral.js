@@ -42,7 +42,24 @@ const getCollaterals = (req, res) => {
     });
 };
 
+const createCollateral = (req, res) => {
+  const { loan_request, name, type, worth } = req.body;
+  const value = worth;
+  new Model("collateral")
+    .insert(
+      [`loan_request`, `name`, `type`, `value`],
+      [loan_request, name, type, value]
+    )
+    .then((collateral_data) => {
+      res.status(200).json({ success: true, data: collateral_data.rows });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getCollateral,
   getCollaterals,
+  createCollateral,
 };
