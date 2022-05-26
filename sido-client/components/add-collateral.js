@@ -39,17 +39,20 @@ const useStyles = makeStyles((theme) => ({
 export default function AddCollateral() {
   const classes = useStyles();
   const router = useRouter();
-  const { loanRequest, setLoanRequest, collateral, setCollateral } =
-    useLoanRequest();
+  const { collateral, setCollateral } = useLoanRequest();
+  const initName = collateral ? collateral.name : "";
+  const initType = collateral ? collateral.type : "";
+  const initWorth = collateral ? collateral.worth : "";
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      type: "",
-      worth: "",
+      name: initName,
+      type: initType,
+      worth: initWorth,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      values.worth = values.worth.replace(/\s/g, "");
       setCollateral(values);
       console.log("Collateral added", values);
       router.push("/loan-request-confirm");

@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       margin: theme.spacing(1),
       minWidth: "100%",
+      maxWidth: "100%",
     },
   },
 
@@ -43,6 +44,8 @@ export default function LoanRequest({ branches }) {
   const router = useRouter();
   const { user } = useAuth();
   const { loanRequest, setLoanRequest } = useLoanRequest();
+  const initBranch = loanRequest ? loanRequest.branch : "";
+  const initAmount = loanRequest ? loanRequest.amount : "";
   const ownerName = user ? `${user.first_name} ${user.last_name}` : "null";
   const id = user ? user.id : "null";
   const handleSomething = async (e) => {
@@ -64,12 +67,13 @@ export default function LoanRequest({ branches }) {
       <Formik
         initialValues={{
           loanee: id,
-          branch: "",
-          amount: "",
+          branch: initBranch,
+          amount: initAmount,
           status: "pending",
         }}
         validationSchema={Yup.object({
           amount: Yup.number()
+            .typeError("Must be a number")
             .required("Required")
             .positive("Must be a positive number")
             .integer("Must be an integer")
@@ -82,6 +86,8 @@ export default function LoanRequest({ branches }) {
           values.branch_details = branches.find(
             (branch) => branch.id === values.branch
           );
+          values.amount = values.amount.replace(/\s/g, "");
+
           console.log("Values", values);
           setLoanRequest(values, console.log("LoanRequest", loanRequest));
           router.push("/register-collateral");

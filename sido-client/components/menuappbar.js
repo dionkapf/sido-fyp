@@ -9,6 +9,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { useAuth } from "../context/AuthContext";
+import { useLoanRequest } from "../context/LoanRequestContext";
 import Router, { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MenuAppBar() {
   const classes = useStyles();
   const { user, setUser } = useAuth();
+  const { loanRequest, collateral } = useLoanRequest();
   const role = user ? user.role : null;
   const { isLoading, setIsLoading } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -44,8 +46,10 @@ export default function MenuAppBar() {
   const router = useRouter();
   const isLoginPage = router.pathname === "/login";
   const isAdmin = role === 1;
-  console.log("Navbar user", user);
-  console.log("Navbar isLoginPage", isLoginPage);
+  console.log("Auth user", user);
+  console.log("Auth isLoginPage", isLoginPage);
+  console.log("LoanRequest loanRequest", loanRequest);
+  console.log("LoanRequest collateral", collateral);
   const homeHref = (role) => {
     console.log("Navbar homeHref", role);
     switch (role) {
