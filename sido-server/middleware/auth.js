@@ -299,7 +299,6 @@ const getCurrentUser = async (req, res) => {
       console.log("No user?");
     } else {
       delete user.user_id;
-      delete user.id;
       console.log("User: ", user);
       res.status(200).json({
         success: true,

@@ -98,6 +98,7 @@ const getOwnerByUserId = async (id) => {
   ).rows;
   const owners = await await new Model("owner").select(
     `
+    id,
     first_name,
     middle_name,
     last_name,

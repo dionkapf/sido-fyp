@@ -114,8 +114,25 @@ const getRequestAmount = (req, res) => {
     });
 };
 
+const createLoanRequest = (req, res) => {
+  const { loanee, branch, amount, status } = req.body;
+  const request_status = status ? status : "pending";
+  new Model("loan_request")
+    .insert(
+      [`loanee`, `branch`, `amount`, `status`],
+      [loanee, branch, amount, request_status]
+    )
+    .then((request_data) => {
+      res.status(200).json({ success: true, data: request_data.rows[0] });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getLoanRequest,
   getLoanRequests,
   getRequestAmount,
+  createLoanRequest,
 };
