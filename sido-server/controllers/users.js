@@ -184,7 +184,25 @@ const getExecutives = async (req, res) => {
   res.status(200).json({ success: true, data });
 };
 
+const checkUsernameAvailability = async (req, res) => {
+  new Model(`"user"`)
+    .select(`"user".name AS name`, "", [], [])
+    .then((user_data) => {
+      const user_names = user_data.rows.map((user) => user.name);
+      console.log("User names: ", user_names);
+      console.log("Username: ", req.params.username);
+      if (user_names.includes(req.params.username)) {
+        res
+          .status(200)
+          .json({ success: false, message: "Username already taken" });
+      } else {
+        res.status(200).json({ success: true });
+      }
+    });
+};
+
 module.exports = {
+  checkUsernameAvailability,
   getUser,
   getUsers,
   getExecutives,
