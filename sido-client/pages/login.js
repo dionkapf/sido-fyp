@@ -11,11 +11,6 @@ export default function Login() {
   };
   return (
     <Layout>
-      {/* <form onSubmit={handleSubmit} action="#" method="POST">
-        <input type="text" name="username" id="username" />
-        <input type="password" name="password" id="password" />
-        <input type="submit" value="ENTER" />
-      </form> */}
       <SignIn />
     </Layout>
   );
