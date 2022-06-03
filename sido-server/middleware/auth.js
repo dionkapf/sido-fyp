@@ -51,28 +51,47 @@ const registerUser = async (req, res) => {
     res.status(400).json({ success: false, message: "Missing fields" });
   }
   if (password !== confirmPassword) {
+    console.log("Passwords do not match");
     res.status(400).json({ success: false, message: "Passwords do not match" });
   } else if (!checkPassword(password)) {
+    console.log("Password does not meet requirements");
     res
       .status(400)
       .json({ success: false, message: "Password is not strong enough" });
   } else if (username === password) {
+    console.log("Username and password cannot be the same");
     res.status(400).json({
       success: false,
       message: "Password cannot be the same as username",
     });
   } else if (await checkifUserExists(username)) {
+    console.log("User already exists");
     res.status(409).json({
       success: false,
       message: "Username already exists",
     });
   } else {
     try {
+      console.log("Hashing password...");
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const user = { username, password: hashedPassword, role };
-      console.log("User", user);
-      await createUser(user);
-      res.status(200).json({ success: true });
+      const user_data = await createUser(user);
+      console.log("User data", user_data.rows[0]);
+      if (user_data.rowCount > 0) {
+        console.log("User created", user_data.rows[0]);
+        res.status(201).json({
+          success: true,
+          message: "User created",
+          user: user_data.rows[0],
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "User not created",
+        });
+      }
+      // console.log("User", newUser);
+      // res.status(200).json({ success: true, data: newUser });
     } catch (err) {
       res.status(401).json({ success: false, message: err.message });
     }

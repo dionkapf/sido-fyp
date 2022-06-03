@@ -85,15 +85,11 @@ const createUser = (user) => {
   if (!(username && password)) {
     res.status(400).json({ success: false, message: "Missing fields" });
   } else {
-    new Model(`"user"`)
+    return new Model(`"user"`)
       .insert(
         [`name`, `password`, `role`],
         [username, password, parseInt(role)]
       )
-      .then((user_data) => {
-        console.log("Insertion successful");
-        return user_data;
-      })
       .catch((error) => {
         console.log(error);
       });

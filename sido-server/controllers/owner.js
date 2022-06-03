@@ -128,9 +128,71 @@ const getOwnerByUserId = async (id) => {
   }
 };
 
+const createOwner = (req, res) => {
+  const {
+    userId,
+    firstName,
+    middleName,
+    lastName,
+    birthdate,
+    email,
+    phoneNumber,
+    businessName,
+    businessType,
+    sex,
+    sector,
+    formalized,
+    address,
+  } = req.body;
+  new Model(`owner`)
+    .insert(
+      [
+        `user_id`,
+        `first_name`,
+        `middle_name`,
+        `last_name`,
+        `birthdate`,
+        `email`,
+        `phone_number`,
+        `business_name`,
+        `business_type`,
+        `sex`,
+        `sector`,
+        `formalized`,
+        `address`,
+      ],
+      [
+        parseInt(userId),
+        firstName,
+        middleName,
+        lastName,
+        birthdate,
+        email,
+        phoneNumber,
+        businessName,
+        businessType,
+        sex,
+        parseInt(sector),
+        formalized,
+        address,
+      ]
+    )
+    .then((user_data) => {
+      console.log("Insertion successful");
+      res.status(201).json({
+        success: true,
+        message: "Owner created",
+        user: user_data.rows[0],
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 module.exports = {
   getOwner,
   getOwners,
   getOwnerByUserId,
   getOwnerByUserId: getOwnerByUserId,
+  createOwner,
 };

@@ -5,6 +5,11 @@ const { registerUser } = require("../middleware/auth");
 // router.route("/").get((req, res) => {
 //   res.status(200).json({ success: true, data: req.body });
 // });
-router.route("/").post(registerUser);
+router
+  .route("/")
+  .post(registerUser)
+  .get((req, res) => {
+    res.status(200).json({ success: true, data: req.body });
+  });
 
 module.exports = router;
