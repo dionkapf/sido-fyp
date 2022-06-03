@@ -141,6 +141,9 @@ export default function MenuAppBar() {
   const handleLogIn = async (event) => {
     await Router.push("/login");
   };
+  const handleRegister = async (event) => {
+    await Router.push("/register");
+  };
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -191,7 +194,7 @@ export default function MenuAppBar() {
           )}
           {!user && !isLoginPage && (
             <div>
-              <IconButton
+              <Button
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
@@ -201,7 +204,18 @@ export default function MenuAppBar() {
                 <Typography variant="h6" className={classes.title}>
                   LOGIN
                 </Typography>
-              </IconButton>
+              </Button>
+              <Button
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleRegister}
+                color="inherit"
+              >
+                <Typography variant="h6" className={classes.title}>
+                  REGISTER
+                </Typography>
+              </Button>
             </div>
           )}
         </Toolbar>
