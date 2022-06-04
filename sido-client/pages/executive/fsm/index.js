@@ -2,7 +2,7 @@ import DashboardLayout from "../../../components/dashboard-layout";
 import { useAuth } from "../../../context/AuthContext";
 import Router, { useRouter } from "next/router";
 import { useEffect } from "react";
-import ExecDashboard from "../../../components/exec-dashboard";
+import FSMDashboard from "../../../components/fsm-dashboard";
 
 export const fsmOptions = [
   {
@@ -23,7 +23,7 @@ export const fsmOptions = [
   },
 ];
 
-export default function Admin({ list }) {
+export default function FSMHome({ list }) {
   const { user, setUser } = useAuth();
   const router = useRouter();
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Admin({ list }) {
       sidebarOptions={fsmOptions}
       title="Financial Manager Dashboard"
     >
-      <ExecDashboard cardData={list} />
+      <FSMDashboard cardData={list} />
     </DashboardLayout>
   );
 }
