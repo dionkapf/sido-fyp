@@ -44,10 +44,30 @@ const getFormalizationRequests = (req, res) => {
   let query = "";
   let values = [];
   if (req.query.owner !== undefined) {
-    console.log("Tiripo");
-    query = "WHERE owner = $1";
-    values = [parseInt(req.query.owner)];
+    if (query === "") {
+      query = `WHERE owner = $1`;
+    } else {
+      query += ` AND owner = $1`;
+    }
+    values.push(parseInt(req.query.owner));
   }
+  if (req.query.branch !== undefined) {
+    if (query === "") {
+      query = "WHERE branch = $1";
+    } else {
+      query += " AND branch = $1";
+    }
+    values.push(parseInt(req.query.branch));
+  }
+  if (req.query.status !== undefined) {
+    if (query === "") {
+      query = `WHERE status = $1`;
+    } else {
+      query += ` AND status = $1`;
+    }
+    values.push(parseInt(req.query.status));
+  }
+
   console.log("Query: ", query);
   console.log("Values: ", values);
   new Model("branch").select(`*`, "", [], []).then((branches) => {
@@ -65,6 +85,12 @@ const getFormalizationRequests = (req, res) => {
         []
       )
       .then((request_data) => {
+        if (req.query.count !== undefined) {
+          const count = request_data.rows.length;
+          console.log("Count", count);
+          res.status(200).json({ success: true, data: count });
+          return;
+        }
         if (request_data.rowCount > 0) {
           request_data.rows.forEach((request) => {
             const branch = branches.find(

@@ -44,6 +44,16 @@ const getOwner = (req, res) => {
 };
 
 const getOwners = (req, res) => {
+  let query = "";
+  let values = [];
+  if (req.query.formalized !== undefined) {
+    if (query === "") {
+      query = `WHERE formalized = $1`;
+    } else {
+      query += ` AND formalized = $1`;
+    }
+    values.push(req.query.formalized);
+  }
   new Model("sector").select(`*`, "", [], []).then((sectors) => {
     sectors = sectors.rows;
     new Model("owner")
@@ -64,8 +74,8 @@ const getOwners = (req, res) => {
       formalized,
       address
       `,
-        "",
-        [],
+        query,
+        values,
         []
       )
       .then((owner_data) => {

@@ -119,11 +119,18 @@ const getUsers = (req, res) => {
 };
 
 const getOperators = async (req, res) => {
+  let query = [4, 5];
+  let values = "WHERE role=$1 OR role=$2";
+  if (req.query.role !== undefined) {
+    query = [parseInt(req.query.role)];
+    values = "WHERE role=$1";
+  }
+
   const users = await new Model(`"user"`).select(
     `"user".id AS id, "user".name AS name, "user".role AS role`,
     "",
-    [4, 5],
-    ["WHERE role=$1 OR role=$2"]
+    query,
+    [values]
   );
   if (req.query.count !== undefined) {
     if (req.query.role !== undefined) {
