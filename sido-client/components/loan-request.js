@@ -152,7 +152,6 @@ export default function LoanRequest({ branches }) {
           </form>
         )}
       </Formik>
-      {/* <Button onClick={handleSomething}>XXX</Button> */}
     </div>
   );
 }

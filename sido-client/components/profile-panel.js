@@ -142,7 +142,7 @@ export default function ProfilePanel({ user }) {
           return "Other";
       }
     };
-    const form_status = user.formalised
+    const form_status = user.formalized
       ? "Formal business"
       : "Informal business";
     userData = [
