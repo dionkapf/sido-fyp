@@ -309,7 +309,7 @@ function authorizeExecutive(req, res, next) {
 const getCurrentUser = async (req, res) => {
   const accessToken = req.cookies.accessToken;
   console.log("Access token: ", accessToken);
-  console.log("REQ: ", req);
+  // console.log("REQ: ", req);
   try {
     const { id, username, role, exp } = jwt.decode(accessToken);
     const user = await getUserDetails(id, role);
@@ -317,7 +317,7 @@ const getCurrentUser = async (req, res) => {
     if (!user) {
       console.log("No user?");
     } else {
-      delete user.user_id;
+      // delete user.user_id;
       console.log("User: ", user);
       res.status(200).json({
         success: true,
