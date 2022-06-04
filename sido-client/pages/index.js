@@ -10,8 +10,19 @@ export default function Home() {
   const name = user
     ? `Welcome back, ${user.first_name}`
     : "Welcome to the SIDO APP";
-      
 
+  const checkFormalization = () => {
+    if (user) {
+      console.log("User exists for formalizing");
+      if (user.formalized) {
+        console.log("User is formalized", user.formalized);
+        return false;
+      } else return true;
+    } else {
+      console.log("Locked and loadeed");
+      return true;
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -36,17 +47,19 @@ export default function Home() {
               </div>
             </Link>
           </div>
-          <div className={styles.card}>
-            <Link href="/form-request" passHref className={styles.card}>
-              <div>
-                <h2>Rasmilishe &rarr;</h2>
-                <p>
-                  Start the process of formalizing your business and earn your
-                  rights
-                </p>
-              </div>
-            </Link>
-          </div>
+          {checkFormalization() && (
+            <div className={styles.card}>
+              <Link href="/form-request" passHref className={styles.card}>
+                <div>
+                  <h2>Rasmilishe &rarr;</h2>
+                  <p>
+                    Start the process of formalizing your business and earn your
+                    rights
+                  </p>
+                </div>
+              </Link>
+            </div>
+          )}
         </div>
       </main>
 
