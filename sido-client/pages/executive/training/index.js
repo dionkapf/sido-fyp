@@ -2,7 +2,7 @@ import DashboardLayout from "../../../components/dashboard-layout";
 import { useAuth } from "../../../context/AuthContext";
 import Router, { useRouter } from "next/router";
 import { useEffect } from "react";
-import ExecDashboard from "../../../components/exec-dashboard";
+import TrainDashboard from "../../../components/train-dashboard";
 
 export const trainOptions = [
   {
@@ -18,8 +18,8 @@ export const trainOptions = [
     href: "/executive/training/requests",
   },
 ];
-export default function Admin({ list }) {
-  const { user, setUser } = useAuth();
+export default function TrainingHome({ list }) {
+  const { user } = useAuth();
   const router = useRouter();
   useEffect(() => {
     console.log("Admin user", user);
@@ -32,51 +32,58 @@ export default function Admin({ list }) {
   }, [router, user]);
 
   return (
-    <DashboardLayout sidebarOptions={trainOptions} title="Admin Dashboard">
-      <ExecDashboard cardData={list} />
+    <DashboardLayout
+      sidebarOptions={trainOptions}
+      title="Training Mgr Dashboard"
+    >
+      <TrainDashboard cardData={list} />
     </DashboardLayout>
   );
 }
 
 export async function getServerSideProps() {
-  const [userCountRes, executiveCountRes, operationCountRes] =
+  const [officerCountRes, requestCountRes, informalCountRes] =
     await Promise.all([
-      fetch("http://localhost:5000/api/owners?count"),
-      fetch("http://localhost:5000/api/staff/executives?count"),
-      fetch("http://localhost:5000/api/staff/operators?count"),
+      fetch("http://localhost:5000/api/staff/operators?count&role=5"),
+      fetch("http://localhost:5000/api/formalization-requests?count"),
+      fetch("http://localhost:5000/api/owners?formalized=false&count"),
     ]);
-  const [userCountJSON, executiveCountJSON, operationCountJSON] =
+  const [officerCountJSON, requestCountJSON, informalCountJSON] =
     await Promise.all([
-      userCountRes.json(),
-      executiveCountRes.json(),
-      operationCountRes.json(),
+      officerCountRes.json(),
+      requestCountRes.json(),
+      informalCountRes.json(),
     ]);
 
-  const userCount = userCountJSON.data;
-  const execCount = executiveCountJSON.data;
-  const opsCount = operationCountJSON.data;
-  const userDesc =
-    userCount == 1 ? "registered end user" : "registered end users";
-  const execDesc = execCount == 1 ? "executive" : "executives";
-  const opsDesc = opsCount == 1 ? "operations user" : "operations users";
-  const users = {
-    title: "Users",
-    description: userDesc,
-    link: "/admin/users",
-    count: userCount,
+  const officerCount = officerCountJSON.data;
+  const requestCount = requestCountJSON.data;
+  const informalCount = informalCountJSON.data;
+  const officerDesc =
+    officerCount == 1
+      ? "business development officer"
+      : "business development officers";
+  const requestDesc =
+    requestCount == 1 ? "formalization request" : "formalization requests";
+  const informalDesc =
+    informalCount == 1 ? "unregistered business" : "unregistered businesses";
+  const officers = {
+    title: "BD Officers",
+    description: officerDesc,
+    link: "/executive/training/business-officers",
+    count: officerCount,
   };
-  const executives = {
-    title: "Executive Users",
-    description: execDesc,
-    link: "/admin/executive-users",
-    count: execCount,
+  const requests = {
+    title: "Requests",
+    description: requestDesc,
+    link: "/executive/training/requests",
+    count: requestCount,
   };
-  const operators = {
-    title: "Operations Users",
-    description: opsDesc,
-    link: "/admin/operations-users",
-    count: opsCount,
+  const informal = {
+    title: "Informal businesses",
+    description: informalDesc,
+    link: "/executive/training/informal",
+    count: informalCount,
   };
-  const list = { users, executives, operators };
+  const list = { officers, requests, informal };
   return { props: { list } };
 }

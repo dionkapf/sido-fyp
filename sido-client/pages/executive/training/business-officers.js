@@ -2,7 +2,7 @@ import Admin from "../../../components/admin";
 import { trainOptions } from "./index";
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:5000/api/staff/operators`);
+  const res = await fetch(`http://localhost:5000/api/staff/operators?role=5`);
   const branches_res = await fetch(`http://localhost:5000/api/branches`);
   const branches_raw = await branches_res.json();
   const branches = branches_raw.data;
@@ -40,10 +40,7 @@ export async function getServerSideProps() {
       ],
     };
   });
-  const description =
-    list.length == 1
-      ? "loan manager/BD officer"
-      : "loan managers and BD officers";
+  const description = list.length == 1 ? "BD officer" : "BD officers";
   return { props: { list, title, description } };
 }
 
