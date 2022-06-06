@@ -39,3 +39,4 @@ yarn-error.log*
 
 # Dev data
 sample_users.json
+*.users

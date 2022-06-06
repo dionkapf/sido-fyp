@@ -70,8 +70,12 @@ export default function SignIn() {
         break;
 
       case 4:
+        router.push("/operation/loan");
+        break;
       case 5:
-        router.push("/operation");
+        router.push("/operation/business");
+        break;
+
       case 6:
       default:
         router.push("/");

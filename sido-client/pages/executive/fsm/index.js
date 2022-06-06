@@ -55,7 +55,7 @@ export async function getServerSideProps() {
     paidAmountRes,
   ] = await Promise.all([
     fetch("http://localhost:5000/api/loan-requests?count"),
-    fetch("http://localhost:5000/api/repayments?count"),
+    fetch("http://localhost:5000/api/loans?count"),
     fetch("http://localhost:5000/api/staff/operators?count&role=4"),
     fetch("http://localhost:5000/api/loan-requests?amount"),
     fetch("http://localhost:5000/api/repayments?amount"),

@@ -62,9 +62,9 @@ export default function MenuAppBar() {
         return "/executive/training";
 
       case 4:
-        return "/operation";
+        return "/operation/loan";
       case 5:
-        return "/operation";
+        return "/operation/training";
 
       default:
         return "/";

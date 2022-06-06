@@ -11,12 +11,12 @@ export default function Profile() {
       router.push("/login");
       console.log("Somehow not redirecting");
     }
-    console.log("Fuck you", user);
+    console.log("User", user);
     if (user && user.role === 1) {
       router.push("/admin");
     }
   }, [user, router]);
-  
+
   return (
     <div className="container">
       <ProfilePanel user={user} />
