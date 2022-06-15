@@ -26,7 +26,7 @@ const getLoanRequest = (req, res) => {
           request.loanee_id = request.loanee;
           delete request.loanee;
         });
-        res.status(200).json({ success: false, data: request_data.rows[0] });
+        res.status(200).json({ success: true, data: request_data.rows[0] });
       })
       .catch((error) => {
         console.log(error);
@@ -35,74 +35,93 @@ const getLoanRequest = (req, res) => {
 };
 
 const getLoanRequests = (req, res) => {
+  console.log("Amount is", req.query.amount);
+  console.log("Branch is", req.query.branch);
   if (req.query.amount !== undefined) {
+    let columns = "SUM(amount)";
+    let query = "";
+    let values = [];
+    if (req.query.branch !== undefined) {
+      columns = `branch, ${columns}`;
+      query += "GROUP BY loan_request.branch";
+    }
     new Model("loan_request")
-      .select(`SUM(amount)`, "", [], [])
+      .select(columns, query, values, [])
       .then((request_data) => {
-        console.log("Request data", request_data);
-        res.status(200).json({ success: true, data: request_data.rows[0].sum });
+        console.log("Request data", request_data.rows);
+        res.status(200).json({ success: true, data: request_data.rows });
         return;
       })
       .catch((error) => {
         console.log(error);
       });
-  }
-  new Model("branch").select(`*`, "", [], []).then((branch_data) => {
-    branches = branch_data.rows;
-    new Model("loan_request")
-      .select(
-        `id,
+  } else {
+    console.log("No amount");
+    let query = "";
+    let values = [];
+    if (req.query.branch !== undefined) {
+      query += "WHERE loan_request.branch = $1";
+      values.push(req.query.branch);
+    }
+    new Model("branch").select(`*`, "", [], []).then((branch_data) => {
+      branches = branch_data.rows;
+      new Model("loan_request")
+        .select(
+          `id,
         loanee,
         branch,
         amount,
         request_date,
         status`,
-        "",
-        [],
-        []
-      )
-      .then(async (request_data) => {
-        const req_data = await request_data.rows.map(async (request) => {
-          const userRes = await new Model("owner").select(
-            `id,
+          query,
+          values,
+          []
+        )
+        .then(async (request_data) => {
+          const req_data = await request_data.rows.map(async (request) => {
+            const userRes = await new Model("owner").select(
+              `id,
             first_name,
             last_name
             `,
-            "",
-            [request.loanee],
-            ["WHERE id = $1"]
-          );
-          const user = userRes.rows[0];
-          const loanee_name = `${user.first_name} ${user.last_name}`;
-          const branch = branches.find((branch) => branch.id == request.branch);
-          branch.region_id = branch.region;
-          delete branch.region;
-          request.branch = branch;
-          request.loanee_id = request.loanee;
-          request.loanee = loanee_name;
+              "",
+              [request.loanee],
+              ["WHERE id = $1"]
+            );
+            const user = userRes.rows[0];
+            const loanee_name = `${user.first_name} ${user.last_name}`;
+            const branch = branches.find(
+              (branch) => branch.id == request.branch
+            );
+            branch.region_id = branch.region;
+            delete branch.region;
+            request.branch = branch;
+            request.loanee_id = request.loanee;
+            request.loanee = loanee_name;
+          });
+          const requests = await Promise.all(req_data);
+          console.log("Req Data", Promise.all(requests));
+          if (req.query.count !== undefined) {
+            const count = request_data.rows.length;
+            console.log("Count", count);
+            res.status(200).json({ success: true, data: count });
+            return;
+          }
+          const data = await Promise.all(request_data.rows);
+          console.log("Data", data);
+          res.status(200).json({ success: true, data: request_data.rows });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        const requests = await Promise.all(req_data);
-        console.log("Req Data", Promise.all(requests));
-        if (req.query.count !== undefined) {
-          const count = request_data.rows.length;
-          console.log("Count", count);
-          res.status(200).json({ success: true, data: count });
-          return;
-        }
-        const data = await Promise.all(request_data.rows);
-        console.log("Data", data);
-        res.status(200).json({ success: false, data: request_data.rows });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
+    });
+  }
 };
 
 const getRequestAmount = (req, res) => {
   console.log("Get Request Amount");
   new Model("loan_request")
-    .select(`SUM(amount)`, "", [], [])
+    .select(`SUM(amount)`, query, values, [])
     .then((request_data) => {
       console.log("Request data", request_data);
       res
