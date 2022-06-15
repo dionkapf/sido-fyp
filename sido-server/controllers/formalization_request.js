@@ -65,7 +65,7 @@ const getFormalizationRequests = (req, res) => {
     } else {
       query += ` AND status = $1`;
     }
-    values.push(parseInt(req.query.status));
+    values.push(req.query.status);
   }
 
   console.log("Query: ", query);
@@ -141,17 +141,12 @@ const createFormalizationRequest = (req, res) => {
 const updateFormalizationRequest = (req, res) => {
   const { status, comment } = req.body;
   new Model("formalization_request")
-    .update(
-      [`status`, `comment`],
-      [status, comment],
-      [parseInt(req.params.id)],
-      ["WHERE id = $1"]
-    )
+    .update([`status`, `comment`], [status, comment], [parseInt(req.params.id)])
     .then((request_data) => {
       console.log("Update successful");
       res.status(200).json({
         success: true,
-        message: "Owner updated",
+        message: "Request updated",
         user: request_data.rows[0],
       });
     })
