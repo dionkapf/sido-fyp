@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [validation, setValidation] = useState(false);
   const router = useRouter();
   const { user, setUser, setIsLoading } = useAuth();
 
@@ -54,6 +55,10 @@ export default function SignIn() {
     });
     const { user: resUser } = await response.json();
     console.log("User from res", resUser);
+    if (resUser == null || resUser == undefined || response.success == false) {
+      setValidation(true);
+      return;
+    }
     localStorage.setItem("user", JSON.stringify(resUser));
     setUser(resUser);
     setIsLoading(false);
@@ -108,6 +113,8 @@ export default function SignIn() {
             label="Username"
             name="username"
             autoFocus
+            error={validation}
+            helperText={validation ? "Invalid username or password" : ""}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -122,6 +129,8 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             value={password}
+            error={validation}
+            helperText={validation ? "Invalid username or password" : ""}
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
