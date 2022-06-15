@@ -120,6 +120,7 @@ const loginUser = async (req, res) => {
           }
         });
       if (!user) {
+        console.log("User not found");
         res.status(404).json({
           success: false,
           message: "Username and password do not match",
