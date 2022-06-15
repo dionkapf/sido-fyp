@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 export async function getServerSideProps() {
   const getUserRequests = await fetch(
-    `http://localhost:5000/api/formalization-requests`,
+    `http://localhost:5000/api/formalization-requests?status=pending`,
     {
       method: "GET",
       headers: {
@@ -100,8 +100,10 @@ export default function FormRequest({ branches, requests }) {
   const [request, setRequest] = useState(null);
   const userRequest = requests.find((request) => request.owner_id === userId);
   // const pendingRequest = false;
-  const pendingRequest = userRequest !== null ? true : false;
+  const pendingRequest = userRequest !== undefined ? true : false;
   console.log("Pending...", pendingRequest);
+  console.log("Requests", requests);
+  console.log("User Request", userRequest);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -190,11 +192,6 @@ export default function FormRequest({ branches, requests }) {
       {!pendingRequest && (
         <>
           <main className={classes.main}>
-            {/* <div>{`${pendingRequest}`}</div>
-          <div>{`${userRequest}`}</div>
-          <div>{`${requests[0].owner_id}`}</div>
-          <div>{JSON.stringify(requests)}</div>
-          <div>{JSON.stringify(user)}</div> */}
             <Avatar className={classes.avatar}>
               <BusinessCenterIcon />
             </Avatar>
@@ -277,8 +274,12 @@ export default function FormRequest({ branches, requests }) {
         <DialogContent>
           <DialogContentText id="request-pending-description" color="black">
             You have already requested for formalization. Your request is{" "}
-            {pendingRequest && userRequest && userRequest.status}.
-            {pendingRequest && userRequest && userRequest.comment}
+            {pendingRequest && userRequest && userRequest.status}.{" "}
+            {pendingRequest &&
+              userRequest &&
+              "\nComment from Officer: " +
+                userRequest.comment.charAt(0).toUpperCase() +
+                userRequest.comment.slice(1)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

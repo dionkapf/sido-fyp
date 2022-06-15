@@ -56,7 +56,7 @@ export default function RegisterBusinessForm({ sectors }) {
   const initBusinessName = business ? business.name : "";
   const initBusinessType = business ? business.type : "";
   const initSector = business ? business.sector : "";
-  const initFormalized = business ? business.formalized : "";
+  const initFormalized = business ? business.formalized : false;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,7 +76,7 @@ export default function RegisterBusinessForm({ sectors }) {
             formalized: initFormalized,
           }}
           onSubmit={async (values, { setSubmitting }) => {
-            values.sector_details = sectors.find(
+values.sector_details = sectors.find(
               (sector) => sector.id === values.sector
             );
             await setBusiness(values);
