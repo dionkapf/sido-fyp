@@ -12,7 +12,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DashboardLayout from "./dashboard-layout";
 import TextField from "@material-ui/core/TextField";
-import styles from "../styles/Hello.module.scss";
+import styles from "../styles/default.scss";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Slide from "@material-ui/core/Slide";
@@ -267,7 +267,7 @@ export default function LoanAppAdmin({ list, title, description, options }) {
         <div className={styles.subtitle}>
           <Paper variant="outlined" className={styles.count}>
             Returned a total of {list.length} {description}
-          </Paper>  
+          </Paper>
         </div>
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
