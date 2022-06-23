@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ApplyLoan({ branches }) {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to the SIDO APP");
+  const title = useRef("Welcome to RASMIKOPO");
   const router = useRouter();
   const classes = useStyles();
   const name = user
     ? `Welcome back, ${user.first_name}`
-    : "Welcome to the SIDO APP";
+    : "Welcome to RASMIKOPO";
   const formalized = true;
   useEffect(() => {
     console.log("USe effect user", user);
