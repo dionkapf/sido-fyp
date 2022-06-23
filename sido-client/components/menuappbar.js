@@ -150,7 +150,7 @@ export default function MenuAppBar() {
         <Toolbar>
           <Typography className={classes.title}>
             <Link href={homeHref(role)} passHref>
-              <a className={classes.homeLink}>SIDO APP</a>
+              <a className={classes.homeLink}>RASMIKOPO</a>
             </Link>
           </Typography>
 

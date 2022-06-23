@@ -1,15 +1,21 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import Footer from "../components/footer";
+
+import styles from "../styles/Home.module.css";
+
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/footer";
 import MenuAppBar from "../components/menuappbar";
 
 export default function Home() {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
   const name = user
     ? `Welcome back, ${user.first_name}`
-    : "Welcome to the SIDO APP";
+    : "Welcome to RASMIKOPO";
+  const router = useRouter();
 
   const checkFormalization = () => {
     if (user) {
@@ -27,7 +33,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>SIDO APP</title>
+        <title>RASMIKOPO</title>
         <meta name="description" content="SIDO Loan and Formalise App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -38,7 +44,7 @@ export default function Home() {
         <p className={styles.description}>What would you like to do today?</p>
         <div className={styles.grid}>
           <div className={styles.card}>
-            <Link href="/apply-loan" className={styles.active} passHref>
+            <Link href="/loan-info" className={styles.active} passHref>
               <div>
                 <h2>Apply for a loan &rarr;</h2>
                 <p>
@@ -49,7 +55,7 @@ export default function Home() {
           </div>
           {checkFormalization() && (
             <div className={styles.card}>
-              <Link href="/form-request" passHref className={styles.card}>
+              <Link href="/form-info" passHref className={styles.card}>
                 <div>
                   <h2>Rasmilishe &rarr;</h2>
                   <p>
