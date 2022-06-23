@@ -1,0 +1,29 @@
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  .title {
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    line-height: 1.15;
+    font-size: 2.5rem;
+  }
+  .subtitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    line-height: 1.15;
+    font-size: 1rem;
+    .count {
+      padding: 0.7rem;
+      color: white;
+      background-color: #4e94ca;
+    }
+  }
+}
