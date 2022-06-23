@@ -9,7 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import DashboardLayout from "../components/dashboard-layout";
+import DashboardLayout from "./dashboard-layout";
 import TextField from "@material-ui/core/TextField";
 import styles from "../styles/Hello.module.scss";
 import Button from "@material-ui/core/Button";
@@ -49,8 +49,9 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-export default function Admin({ list, title, description, options }) {
+export default function LoanAdmin({ list, title, description, options }) {
   const columns = Object.keys(list[0]);
+  console.log("List", list);
   const classes = useStyles();
   const router = useRouter();
   const [verifyComment, setVerifyComment] = useState("");
@@ -87,7 +88,7 @@ export default function Admin({ list, title, description, options }) {
       handleVerifyClose();
       setVerifySnack(true);
       setTimeout(() => {
-        router.push("/operation/business");
+        router.push("/operation/loan");
       }, 1500);
     });
   };
@@ -133,13 +134,28 @@ export default function Admin({ list, title, description, options }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    // setOpen(true);
+    console.log("List", list);
+    alert(`List: ${JSON.stringify(list)}`);
+    alert(`coLUMNS: ${JSON.stringify(columns)}`);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
   console.log("columns", columns);
+  const list2 = [
+    {
+      x: 2,
+      y: 3,
+      z: 4,
+    },
+    {
+      x: 2,
+      y: 3,
+      z: 4,
+    },
+  ];
   return (
     <DashboardLayout title={title} sidebarOptions={options}>
       <main className={styles.main}>
@@ -157,12 +173,7 @@ export default function Admin({ list, title, description, options }) {
                   if (column === "id") {
                     return;
                   }
-                  if (column === "S/N")
-                    return (
-                      <StyledTableCell align="left" key={column}>
-                        {column}
-                      </StyledTableCell>
-                    );
+                  if (column === "S/N") return;
                   else if (column === "Actions")
                     return (
                       <StyledTableCell
@@ -188,16 +199,7 @@ export default function Admin({ list, title, description, options }) {
                     }
                     switch (column) {
                       case "S/N":
-                        return (
-                          <TableCell
-                            align="left"
-                            component="th"
-                            scope="row"
-                            key={row.id}
-                          >
-                            {row[column]}
-                          </TableCell>
-                        );
+                        return;
                       case "Phone":
                         const raw_phone = row[column];
                         const phone_number =
