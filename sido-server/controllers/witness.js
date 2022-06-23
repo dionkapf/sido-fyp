@@ -30,7 +30,64 @@ const getWitnesses = (req, res) => {
     });
 };
 
+const createWitness = (req, res) => {
+  const {
+    first_name,
+    middle_name,
+    last_name,
+    birthdate,
+    phone_number,
+    email,
+    sex,
+  } = req.body;
+  let columns = [];
+  let values = [];
+  if (middle_name) {
+    columns = [
+      `first_name`,
+      `middle_name`,
+      `last_name`,
+      `birthdate`,
+      `phone_number`,
+      `email`,
+      `sex`,
+    ];
+    values = [
+      first_name,
+      middle_name,
+      last_name,
+      birthdate,
+      phone_number,
+      email,
+      sex,
+    ];
+  } else {
+    columns = [
+      `first_name`,
+      `last_name`,
+      `birthdate`,
+      `phone_number`,
+      `email`,
+      `sex`,
+    ];
+    values = [first_name, last_name, birthdate, phone_number, email, sex];
+  }
+  new Model(`witness`)
+    .insert(columns, values)
+    .then((witness_data) => {
+      console.log("Insertion successful");
+      res.status(201).json({
+        success: true,
+        message: "Witness created",
+        data: witness_data.rows[0],
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 module.exports = {
   getWitness,
   getWitnesses,
+  createWitness
 };
