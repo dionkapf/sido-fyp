@@ -153,9 +153,52 @@ const getLoansDetails = (req, res) => {
     });
 };
 
+const createLoan = (req, res) => {
+  const {
+    loanRequestId,
+    approvalDate,
+    deadline,
+    witness1,
+    witness2,
+    staff,
+    amount,
+    rate,
+  } = req.body;
+  new Model("loan")
+    .insert(
+      [
+        `request`,
+        `approval_date`,
+        `deadline`,
+        `witness_1`,
+        `witness_2`,
+        `staff`,
+        `amount`,
+        `interest_rate`,
+      ],
+      [
+        loanRequestId,
+        approvalDate,
+        deadline,
+        witness1,
+        witness2,
+        staff,
+        amount,
+        rate,
+      ]
+    )
+    .then((loan_data) => {
+      res.status(200).json({ success: true, data: loan_data.rows[0] });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getLoan,
   getLoans,
   getLoanDetails,
   getLoansDetails,
+  createLoan,
 };
