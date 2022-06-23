@@ -1,82 +1,108 @@
-import Admin from "../../../components/admin";
+import LoanAdmin from "../../../components/loan-admin";
 import { loanOptions } from "./index";
 import { useAuth } from "../../../context/AuthContext";
+import { Button } from "@material-ui/core";
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:5000/api/repayments`);
+  const res = await fetch(`http://localhost:5000/api/loans`);
   const data = await res.json();
-  const repaymentsPromise = await data.data.map(async (repayment) => {
-    const loanee_id = repayment.request.loanee;
-    const loan_id = repayment.request.loan;
-    console.log("loanee", loanee_id);
-    console.log("loan", loan_id);
-    const userRes = await fetch(
-      `http://localhost:5000/api/owners/${loanee_id}`
+  const loansPromise = await data.data.map(async (loan) => {
+    const loanRequestId = loan.request_id;
+    console.log("loan request in lp", loanRequestId);
+    console.log("loan request in lp", loan);
+    const requestRes = await fetch(
+      `http://localhost:5000/api/loan-requests/${parseInt(loanRequestId)}`
     );
-    const loanRes = await fetch(
-      `http://localhost:5000/api/loan-requests/${loan_id}`
+    const requestData = await requestRes.json();
+    const request = requestData.data;
+    console.log("request in lp", request);
+    const ownerRes = await fetch(
+      `http://localhost:5000/api/owners/${request.loanee_id}`
     );
-    const loanData = await loanRes.json();
-    const loan = loanData.data;
-    const userData = await userRes.json();
-    const loanee = userData.data;
+    const ownerData = await ownerRes.json();
+    const loanee = ownerData.data;
+    if (requestData.success) {
+      console.log("Request", request);
+      console.log("loanee", loanee);
+      // const loanee = request.loanee;
+    } else {
+      console.log("Bugger");
+    }
+    // const loanee = request.loanee;
+    // const loanee = "Sample man";
+    const branch = request.branch.name;
+    // const branch = request.branch.name;
     return {
-      ...repayment,
+      ...loan,
       loanee,
-      loan,
+      branch,
     };
   });
-  console.log("repaymentsPromise", repaymentsPromise);
-  const title = "Loan Repayments";
+  console.log("loansPromise", loansPromise);
+  const title = "Loan Disbursed";
   let index = 1;
-  const repayments = await Promise.all(repaymentsPromise);
-  console.log("repayments", repayments);
-  const list = repayments.map((item) => {
+  const loans = await Promise.all(loansPromise);
+  console.log("loans", loans);
+  const list = loans.map((item) => {
     const amountNumber = item.amount
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     const amount = `TSh. ${amountNumber}`;
-    const payDate = new Date(item.payment_date).toLocaleString("en-gb", {
+    const approvalDate = new Date(item.approval_date).toLocaleString("en-gb", {
       day: "numeric",
       year: "numeric",
       month: "long",
     });
-
+    const deadline = new Date(item.deadline).toLocaleString("en-gb", {
+      day: "numeric",
+      year: "numeric",
+      month: "long",
+    });
+    const interestRate = `${item.interest_rate}%`;
     return {
       "S/N": index++,
-      Branch: item.loan.branch.name,
+      Branch: item.branch,
       Loanee: `${item.loanee.first_name} ${item.loanee.last_name}`,
-      "Payment Date": payDate,
-      "Receipt Number": item.receipt_number,
-      "Amount Paid": amount,
+      "Approval Date": approvalDate,
+      Deadline: deadline,
+      "Amount Loaned": amount,
+      "Interest Rate": interestRate,
       Actions: [
         {
-          name: "Edit",
+          name: "ADD PAYMENT",
           url: `/admin/operations-users/${item.id}`,
-        },
-        {
-          name: "Delete",
-          url: `/admin/operations-users/${item.id}/delete`,
         },
       ],
     };
   });
-  const description = list.length == 1 ? "loan repayment" : "loan repayments";
+  const description = list.length == 1 ? "loan" : "loans";
+
   return { props: { list, title, description } };
 }
 
-export default function Repayments({ list, title, description }) {
+export default function Loans({ list, title, description }) {
   const { user } = useAuth();
   console.log("user", user);
   const filteredList = user
     ? list.filter((item) => item.Branch == user.branch_name)
     : list;
+  console.log("filteredList", filteredList);
   return (
-    <Admin
-      list={list}
-      title={title}
-      description={description}
-      options={loanOptions}
-    />
+    <>
+      <LoanAdmin
+        list={list}
+        title={title}
+        description={description}
+        options={loanOptions}
+      />
+      <Button
+        onClick={() => {
+          alert(JSON.stringify(filteredList));
+          alert(JSON.stringify(list));
+        }}
+      >
+        XX
+      </Button>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import Admin from "../../../components/admin";
+import LoanAppAdmin from "../../../components/loan-app-admin";
 import { loanOptions } from "./index";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -19,6 +19,7 @@ export async function getServerSideProps() {
     });
 
     return {
+      id: item.id,
       "S/N": index++,
       Loanee: item.loanee,
       Branch: item.branch.name,
@@ -27,11 +28,15 @@ export async function getServerSideProps() {
       Status: item.status,
       Actions: [
         {
-          name: "ACCEPT",
+          name: "REJECT",
           url: `#`,
         },
         {
-          name: "REJECT",
+          name: "COLLATERAL",
+          url: `() => {handleRejectOpen(row);}`,
+        },
+        {
+          name: "ACCEPT",
           url: `#`,
         },
       ],
@@ -47,9 +52,9 @@ export default function LoanApps({ list, title, description }) {
   const filteredList = user
     ? list.filter((item) => item.Branch == user.branch_name)
     : list;
-    
+
   return (
-    <Admin
+    <LoanAppAdmin
       list={filteredList}
       title={title}
       description={description}

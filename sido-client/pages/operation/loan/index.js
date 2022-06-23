@@ -56,7 +56,7 @@ export default function LoanManagerHome({ list }) {
   return (
     <DashboardLayout
       sidebarOptions={loanOptions}
-      title="Financial Manager Dashboard"
+      title="Loan Manager Dashboard"
     >
       <LoanDashboard cardData={list} />
     </DashboardLayout>
