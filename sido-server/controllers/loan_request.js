@@ -26,6 +26,10 @@ const getLoanRequest = (req, res) => {
           request.loanee_id = request.loanee;
           delete request.loanee;
         });
+        if (request_data.rows.length === 0) {
+          res.status(404).json({ success: false, message: "Not Found" });
+          return;
+        }
         res.status(200).json({ success: true, data: request_data.rows[0] });
       })
       .catch((error) => {
@@ -149,9 +153,23 @@ const createLoanRequest = (req, res) => {
     });
 };
 
+const updateLoanRequest = (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+  new Model("loan_request")
+    .update([`status`], [status], [id])
+    .then((request_data) => {
+      res.status(200).json({ success: true, data: request_data.rows[0] });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getLoanRequest,
   getLoanRequests,
   getRequestAmount,
   createLoanRequest,
+  updateLoanRequest,
 };
