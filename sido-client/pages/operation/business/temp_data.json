@@ -1,0 +1,27 @@
+{
+  "Branch": "Dar es Salaam",
+  "Business": "Trinkets Inc.",
+  "Date Requested": "22 June 2022",
+  "Owner": "Juma Rashid",
+  "S/N": 1,
+  "Sector": "Farming",
+  "Status": "pending",
+  "id": "6",
+  "owner_data": {
+    "address": "235 Mzinga Way\nDar es Salaam",
+    "birthdate": "1993-03-22T21:00:00.000Z",
+    "business_name": "Trinkets Inc.",
+    "business_type": "Nauza trinkets na vitu vingi vingine",
+    "email": "jumarashid@gmail.com",
+    "first_name": "Juma",
+    "formalized": false,
+    "id": "19",
+    "last_name": "Rashid",
+    "middle_name": null,
+    "phone_number": "6894379323",
+    "sector_id": 3,
+    "sex": "M",
+    "user_id": 56
+  },
+  "sector_data": { "id": "3", "name": "Farming" }
+}

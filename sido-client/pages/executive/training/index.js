@@ -79,7 +79,7 @@ export async function getServerSideProps() {
     count: requestCount,
   };
   const informal = {
-    title: "Informal businesses",
+    title: "Informal firms",
     description: informalDesc,
     link: "/executive/training/informal",
     count: informalCount,

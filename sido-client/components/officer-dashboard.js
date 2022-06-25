@@ -9,9 +9,7 @@ export default function OfficerDashboard({ cardData }) {
   const filteredRequests =
     user && user.branch
       ? requests.list.filter((item) => {
-          return (
-            item.branch.id == parseInt(user.branch) && item.status == "pending"
-          );
+          return item.branch.id == parseInt(user.branch);
         })
       : requests.list;
   console.log("filteredRequests in db", filteredRequests);
