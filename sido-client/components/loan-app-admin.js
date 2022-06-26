@@ -12,7 +12,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DashboardLayout from "./dashboard-layout";
 import TextField from "@material-ui/core/TextField";
-import styles from "../styles/default.scss";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Slide from "@material-ui/core/Slide";
@@ -42,6 +41,35 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       margin: theme.spacing(1),
     },
+  },
+  main: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "2rem",
+  },
+  title: {
+    fontWeight: "bold",
+    color: "#333",
+    margin: 0,
+    lineHeight: 1.15,
+    fontSize: "2.5rem",
+  },
+  subtitle: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "0.5rem 1rem",
+    margin: 0,
+    lineHeight: 1.15,
+    fontSize: "1rem",
+  },
+  count: {
+    padding: "0.7rem",
+    color: "white",
+    backgroundColor: "#4e94ca",
   },
   collateral_header: {
     textAlign: "center",
@@ -262,10 +290,10 @@ export default function LoanAppAdmin({ list, title, description, options }) {
   console.log("columns", columns);
   return (
     <DashboardLayout title={title} sidebarOptions={options}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>{title}</h1>
-        <div className={styles.subtitle}>
-          <Paper variant="outlined" className={styles.count}>
+      <main className={classes.main}>
+        <h1 className={classes.title}>{title}</h1>
+        <div className={classes.subtitle}>
+          <Paper variant="outlined" className={classes.count}>
             Returned a total of {list.length} {description}
           </Paper>
         </div>
