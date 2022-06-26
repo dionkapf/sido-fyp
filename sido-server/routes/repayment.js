@@ -1,8 +1,18 @@
 let express = require("express");
 let router = express.Router();
-const { getRepayment, getRepayments } = require("../controllers/repayment");
+const {
+  getRepayment,
+  getRepayments,
+  createRepayment,
+  updateRepayment,
+  deleteRepayment,
+} = require("../controllers/repayment");
 
-router.route("/").get(getRepayments);
-router.route("/:id").get(getRepayment);
+router.route("/").get(getRepayments).post(createRepayment);
+router
+  .route("/:id")
+  .get(getRepayment)
+  .put(updateRepayment)
+  .delete(deleteRepayment);
 
 module.exports = router;
