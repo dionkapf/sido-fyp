@@ -61,16 +61,16 @@ export async function getServerSideProps() {
     const interestRate = `${item.interest_rate}%`;
     return {
       "S/N": index++,
-      Branch: item.branch,
       Loanee: `${item.loanee.first_name} ${item.loanee.last_name}`,
+      Branch: item.branch,
       "Approval Date": approvalDate,
       Deadline: deadline,
       "Amount Loaned": amount,
       "Interest Rate": interestRate,
       Actions: [
         {
-          name: "ADD PAYMENT",
-          url: `/admin/operations-users/${item.id}`,
+          name: "PAYMENTS",
+          url: `/operation/loan/payments/${item.id}`,
         },
       ],
     };
