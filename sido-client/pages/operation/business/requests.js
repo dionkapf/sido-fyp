@@ -145,6 +145,10 @@ export default function Requests({
             name: "Reject",
             url: `/admin/operations-users/${item.id}`,
           },
+          {
+            name: "Generate",
+            url: `/${item.id}/operations-users`,
+          },
         ],
       };
     });
