@@ -6,6 +6,7 @@ const {
   createFormalizationRequest,
   updateFormalizationRequest,
 } = require("../controllers/formalization_request");
+const { createDocument } = require("../middleware/generate-doc");
 
 router
   .route("/")
@@ -15,5 +16,7 @@ router
   .route("/:id")
   .get(getFormalizationRequest)
   .put(updateFormalizationRequest);
+
+router.route("/:id/create-doc").post(createDocument);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 // Module variables
 const createError = require("http-errors");
+const fs = require("fs");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -46,7 +47,6 @@ app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 
 // API Routes
-// app.use("/api/users", usersRouter);
 app.use("/api/branches", branchRouter);
 app.use("/api/collaterals", collateralRouter);
 app.use("/api/districts", districtRouter);
@@ -62,6 +62,22 @@ app.use("/api/roles", roleRouter);
 app.use("/api/sectors", sectorRouter);
 app.use("/api/staff", staffRouter);
 app.use("/api/witnesses", witnessRouter);
+app.get("/download/:file", (req, res) => {
+  console.log("Downloading...");
+  const { file } = req.params;
+  fs.readFile(path.join(__dirname, `public/documents/${file}`), (err, data) => {
+    if (err) {
+      res.writeHead(404, { "Content-Type": "text/html" });
+      res.end("404 Not Found");
+    } else {
+      res.writeHead(200, {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      });
+      res.end(data);
+    }
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
