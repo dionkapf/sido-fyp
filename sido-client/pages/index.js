@@ -14,7 +14,7 @@ export default function Home() {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
   const name = user
     ? `Welcome back, ${user.first_name}`
-    : "Welcome to RASMIKOPO";
+    : "Welcome to RASMISHA";
   const router = useRouter();
 
   const checkFormalization = () => {
@@ -33,8 +33,8 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>RASMIKOPO</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <title>RASMISHA</title>
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

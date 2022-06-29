@@ -189,9 +189,23 @@ const updateStaff = (req, res) => {
     phoneNumber,
   ];
   const { id } = req.params;
+  console.log("ID", id);
   new Model("staff")
-    .update(columns, values, [parseInt(id)])
+    .update(
+      [
+        `first_name`,
+        `middle_name`,
+        `last_name`,
+        `birthdate`,
+        `email`,
+        `branch`,
+        `phone_number`,
+      ],
+      [firstName, middleName, lastName, birthDate, email, branch, phoneNumber],
+      [parseInt(id)]
+    )
     .then((staff_data) => {
+      console.log("Staff Data", staff_data.rows[0]);
       res.status(200).json({ success: true, data: staff_data.rows });
     })
     .catch((error) => {

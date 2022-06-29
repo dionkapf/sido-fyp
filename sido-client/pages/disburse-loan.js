@@ -242,7 +242,7 @@ export default function DisburseLoan() {
     <div className={classes.container}>
       <Head>
         <title>Disburse Loan</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

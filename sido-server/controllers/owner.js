@@ -109,6 +109,7 @@ const getOwnerByUserId = async (id) => {
   const owners = await await new Model("owner").select(
     `
     id,
+    user_id,
     first_name,
     middle_name,
     last_name,
@@ -199,10 +200,72 @@ const createOwner = (req, res) => {
       console.log(error);
     });
 };
+const updateOwner = (req, res) => {
+  console.log("Update owner");
+  const { id } = req.params;
+  const {
+    firstName,
+    middleName,
+    lastName,
+    birthdate,
+    email,
+    phoneNumber,
+    businessName,
+    businessType,
+    sex,
+    sector,
+    formalized,
+    address,
+  } = req.body;
+  new Model(`owner`)
+    .update(
+      [
+        `first_name`,
+        `middle_name`,
+        `last_name`,
+        `birthdate`,
+        `email`,
+        `phone_number`,
+        `business_name`,
+        `business_type`,
+        `sex`,
+        `sector`,
+        `formalized`,
+        `address`,
+      ],
+      [
+        firstName,
+        middleName,
+        lastName,
+        birthdate,
+        email,
+        phoneNumber,
+        businessName,
+        businessType,
+        sex,
+        parseInt(sector),
+        formalized,
+        address,
+      ],
+      [parseInt(id)]
+    )
+    .then((user_data) => {
+      console.log("Update successful");
+      res.status(201).json({
+        success: true,
+        message: "Owner created",
+        data: user_data.rows,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 module.exports = {
   getOwner,
   getOwners,
   getOwnerByUserId,
   getOwnerByUserId: getOwnerByUserId,
   createOwner,
+  updateOwner,
 };

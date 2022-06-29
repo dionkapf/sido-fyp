@@ -61,7 +61,7 @@ export default function LoanInfo({ branches }) {
     <div className={classes.container}>
       <Head>
         <title>Start formalization</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />
@@ -96,10 +96,10 @@ export default function LoanInfo({ branches }) {
             <br />
             <Typography variant="body2" component="p">
               If you are ready to start formalization and you do not have a
-              RASMIKOPO account, please click on REGISTER below to create one.
+              RASMISHA account, please click on REGISTER below to create one.
             </Typography>
             <Typography variant="body2" component="p">
-              If you have a RASMIKOPO account, please click on LOGIN below to
+              If you have a RASMISHA account, please click on LOGIN below to
               login to your account.
             </Typography>
           </CardContent>

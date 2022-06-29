@@ -21,10 +21,6 @@ function checkPassword(password) {
   return re.test(password);
 }
 
-function validatePassword(password, hashedPassword) {
-  return bcrypt.compare(password, hashedPassword);
-}
-
 async function changePassword(req, res) {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   if (!(oldPassword && newPassword && confirmPassword)) {
@@ -525,6 +521,8 @@ async function getRefreshToken(user_id) {
 async function updateUser(req, res) {
   const { id } = req.params;
   const { username, password, confirmPassword } = req.body;
+  console.log("Update user: ", req.body);
+  console.log("Update user: ", req.params);
   const userExists = await checkifUserExists(username);
   if (!(username && password && confirmPassword)) {
     res.status(400).json({ success: false, message: "Missing fields" });
@@ -579,6 +577,41 @@ async function updateUser(req, res) {
     }
   }
 }
+async function validatePassword(req, res, next) {
+  const { oldPassword } = req.body;
+  const { id } = req.params;
+  console.log("Old password: ", oldPassword);
+  console.log("id: ", id);
+  new Model(`"user"`)
+    .select(`password`, "", [parseInt(id)], ["WHERE id=$1"])
+    .then((user_data) => {
+      console.log("User data", user_data.rows[0]);
+      if (user_data.rowCount > 0) {
+        const user = user_data.rows[0];
+        bcrypt.compare(oldPassword, user.password, (err, result) => {
+          if (result) {
+            console.log("Password is correct");
+            next();
+          } else {
+            console.log("Password is incorrect");
+            res.status(401).json({
+              success: false,
+              message: "Invalid password",
+            });
+          }
+        });
+      } else {
+        console.log("User not found");
+        res.status(401).json({
+          success: false,
+          message: "User doesn't exist",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 module.exports = {
   registerUser,
@@ -590,8 +623,9 @@ module.exports = {
   validateToken,
   generateAccessToken,
   refreshAccessToken,
+  checkAccessToken,
   authorizeAdmin,
   authorizeOperations,
   authorizeExecutive,
-  checkAccessToken,
+  validatePassword,
 };

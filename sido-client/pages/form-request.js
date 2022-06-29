@@ -86,6 +86,11 @@ export async function getServerSideProps() {
   const res = await fetch(`http://localhost:5000/api/branches`);
   const data = await res.json();
   const branches = data.data;
+
+  const sectorRes = await fetch(`http://localhost:5000/api/sectors`);
+  const sectorData = await sectorRes.json();
+  const sectors = sectorData.data;
+
   return { props: { branches, requests } };
 }
 
@@ -185,7 +190,7 @@ export default function FormRequest({ branches, requests }) {
     <div className={classes.container}>
       <Head>
         <title>Rasmilishe</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

@@ -155,7 +155,7 @@ export default function ConfirmRegistration() {
     <div className={classes.container}>
       <Head>
         <title>Confirm Registration</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

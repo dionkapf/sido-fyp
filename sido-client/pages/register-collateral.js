@@ -46,7 +46,7 @@ export default function RegisterCollateral({ branches }) {
     <div className={classes.container}>
       <Head>
         <title>Add collateral for loan</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

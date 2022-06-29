@@ -1,9 +1,6 @@
 import Layout from "../components/layout";
 import SignIn from "../components/signin";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
+import Head from "next/head";
 
 export default function Login() {
   const handleSubmit = (e) => {
@@ -11,6 +8,11 @@ export default function Login() {
   };
   return (
     <Layout>
+      <Head>
+        <title>Login</title>
+        <meta name="description" content="Rasmisha App" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <SignIn />
     </Layout>
   );

@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ApplyLoan({ branches }) {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to RASMIKOPO");
+  const title = useRef("Welcome to RASMISHA");
   const router = useRouter();
   const classes = useStyles();
   const name = user
     ? `Welcome back, ${user.first_name}`
-    : "Welcome to RASMIKOPO";
+    : "Welcome to RASMISHA";
   const formalized = true;
   useEffect(() => {
     console.log("USe effect user", user);
@@ -50,7 +50,7 @@ export default function ApplyLoan({ branches }) {
     <div className={classes.container}>
       <Head>
         <title>Loan Application</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />

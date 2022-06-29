@@ -113,7 +113,7 @@ export default function LoanRequestConfirm() {
     <div className={classes.container}>
       <Head>
         <title>Confirm Request</title>
-        <meta name="description" content="SIDO Loan and Formalise App" />
+        <meta name="description" content="Rasmisha App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuAppBar />
