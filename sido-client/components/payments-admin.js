@@ -129,10 +129,8 @@ export default function PaymentsAdmin({
   const columns = !isListEmpty ? Object.keys(list[0]) : null;
   const classes = useStyles();
   const router = useRouter();
-  const [comment, setComment] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [rowData, setRowData] = useState({});
   const [rowId, setRowId] = useState(null);
   const [initData, setInitData] = useState({
     amount: "",

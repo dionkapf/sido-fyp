@@ -1,5 +1,5 @@
-import Admin from "../../components/admin";
 import { adminOptions } from "./index";
+import OperationAdmin from "../../components/operation-admin";
 
 export async function getServerSideProps() {
   const res = await fetch(`http://localhost:5000/api/staff/operators`);
@@ -44,16 +44,17 @@ export async function getServerSideProps() {
     list.length == 1
       ? "loan manager/BD officer"
       : "loan managers and BD officers";
-  return { props: { list, title, description } };
+  return { props: { list, title, description, branches } };
 }
 
-export default function OperationUsers({ list, title, description }) {
+export default function OperationUsers({ list, title, description, branches }) {
   return (
-    <Admin
+    <OperationAdmin
       list={list}
       title={title}
       description={description}
       options={adminOptions}
+      branches={branches}
     />
   );
 }

@@ -1,4 +1,4 @@
-import Admin from "../../components/admin";
+import ExecutiveAdmin from "../../components/executive-admin";
 import { adminOptions } from "./index";
 
 export async function getServerSideProps() {
@@ -20,8 +20,10 @@ export async function getServerSideProps() {
     const branch_name = branch ? branch.name : "NOT FOUND";
     const role =
       item.role == 2 ? "Financial Services Manager" : "Training Manager";
+    console.log("Item: ", item);
     return {
       "S/N": index++,
+      staff_data: item,
       Name: full_name,
       Email: item.email,
       Phone: item.phone_number,
@@ -37,21 +39,26 @@ export async function getServerSideProps() {
           name: "Delete",
           url: `/admin/executive-users/${item.id}/delete`,
         },
+        {
+          name: "Cred",
+          url: `/admin/executive-users/${item.id}/password`,
+        },
       ],
     };
   });
   const description = list.length == 1 ? "executives" : "executive";
-  return { props: { list, title, description } };
+  return { props: { list, title, description, branches } };
 }
 
-export default function ExecutiveUsers({ list, title, description }) {
+export default function ExecutiveUsers({ list, title, description, branches }) {
   console.log("list", list);
   return (
-    <Admin
+    <ExecutiveAdmin
       list={list}
       title={title}
       description={description}
       options={adminOptions}
+      branches={branches}
     />
   );
 }
