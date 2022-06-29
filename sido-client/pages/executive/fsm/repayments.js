@@ -1,4 +1,4 @@
-import Admin from "../../../components/admin";
+import RepaymentAdmin from "../../../components/repayment-admin";
 import { fsmOptions } from "./index";
 
 export async function getServerSideProps() {
@@ -56,7 +56,7 @@ export async function getServerSideProps() {
 
 export default function Repayments({ list, title, description }) {
   return (
-    <Admin
+    <RepaymentAdmin
       list={list}
       title={title}
       description={description}

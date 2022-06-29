@@ -84,7 +84,7 @@ export async function getServerSideProps() {
   const requestCount = requestCountJSON.data;
   const loansCount = loansCountJSON.data;
   const managerCount = managerCountJSON.data;
-  const requestAmount = formatMoney(requestAmountJSON.data);
+  const requestAmount = formatMoney(requestAmountJSON.data[0].sum);
   const paidAmount = formatMoney(paidAmountJSON.data);
   const requestDesc =
     requestCount == 1 ? "loan application" : "loan applications";

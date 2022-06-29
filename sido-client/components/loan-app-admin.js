@@ -204,6 +204,8 @@ export default function LoanAppAdmin({ list, title, description, options }) {
 
   const getCollateral = async (row) => {
     const loanRequestId = row.id;
+    console.log("loanRequestId", loanRequestId);
+    console.log("row", row);
     setLoanData(row);
     const staffId = user ? user.id : null;
     // alert(`Loan req no. ${loanRequestId} and User is ${staffId}`);

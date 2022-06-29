@@ -1,4 +1,4 @@
-import Admin from "../../../components/admin";
+import LoanAppAdmin from "../../../components/loan-app-admin";
 import { fsmOptions } from "./index";
 
 export async function getServerSideProps() {
@@ -18,6 +18,7 @@ export async function getServerSideProps() {
     });
 
     return {
+      id: item.id,
       "S/N": index++,
       Loanee: item.loanee,
       Branch: item.branch.name,
@@ -43,7 +44,7 @@ export async function getServerSideProps() {
 
 export default function LoanApps({ list, title, description }) {
   return (
-    <Admin
+    <LoanAppAdmin
       list={list}
       title={title}
       description={description}

@@ -1,4 +1,4 @@
-import Admin from "../../../components/admin";
+import BDOAdmin from "../../../components/bdo-admin";
 import { trainOptions } from "./index";
 
 export async function getServerSideProps() {
@@ -46,7 +46,7 @@ export async function getServerSideProps() {
 
 export default function OperationUsers({ list, title, description }) {
   return (
-    <Admin
+    <BDOAdmin
       list={list}
       title={title}
       description={description}

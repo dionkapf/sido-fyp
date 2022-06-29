@@ -101,7 +101,6 @@ export default function WitnessRegister() {
           }}
           validationSchema={Yup.object({
             first_name1: Yup.string().required("Required"),
-            middle_name1: Yup.string().required("Required"),
             last_name1: Yup.string().required("Required"),
             birthdate1: Yup.string().required("Required"),
             sex1: Yup.mixed().oneOf(["M", "F", "O"]).defined(),
@@ -113,7 +112,6 @@ export default function WitnessRegister() {
               "Must be a valid phone number"
             ),
             first_name2: Yup.string().required("Required"),
-            middle_name2: Yup.string().required("Required"),
             last_name2: Yup.string().required("Required"),
             birthdate2: Yup.string().required("Required"),
             sex2: Yup.mixed().oneOf(["M", "F", "O"]).defined(),
@@ -188,7 +186,6 @@ export default function WitnessRegister() {
                       onChange={formik.handleChange}
                     />
                     <TextField
-                      required
                       fullWidth
                       margin="normal"
                       id="middle_name1"
@@ -341,7 +338,6 @@ export default function WitnessRegister() {
                       onChange={formik.handleChange}
                     />
                     <TextField
-                      required
                       fullWidth
                       margin="normal"
                       id="middle_name2"

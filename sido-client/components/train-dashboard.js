@@ -10,7 +10,6 @@ export default function TrainDashboard({ cardData }) {
       <div className={styles.cardContainer}>
         <SimpleCard data={officers} />
         <SimpleCard data={requests} />
-        <SimpleCard data={informal} />
       </div>
     </main>
   );

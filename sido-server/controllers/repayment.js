@@ -137,6 +137,7 @@ const getRepayments = (req, res) => {
           return;
         }
         res.status(200).json({ success: true, data: result });
+        return;
       } else {
         res.status(200).json({ success: true, data: [] });
         return;
