@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FormInfo({ branches }) {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to RASMISHA");
+  const title = useRef("Welcome to RASMISHA, Formalization and Loan Services ");
   const router = useRouter();
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;

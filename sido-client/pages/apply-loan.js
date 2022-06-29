@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ApplyLoan({ branches }) {
   const { user, setUser, isLoading, setIsLoading } = useAuth();
-  const title = useRef("Welcome to RASMISHA");
+  const title = useRef("Welcome to RASMISHA, Formalization and Loan Services ");
   const router = useRouter();
   const classes = useStyles();
   const name = user
     ? `Welcome back, ${user.first_name}`
-    : "Welcome to RASMISHA";
+    : "Welcome to RASMISHA, Formalization and Loan Services ";
   const formalized = true;
   useEffect(() => {
     console.log("USe effect user", user);

@@ -1,12 +1,31 @@
 .container {
   padding: 0 0rem;
-  background-color: #F8F0E3;
+  background-color: #f8f0e3;
 }
 
 .main {
   min-height: 100vh;
-  padding: 4rem 0;
+  padding: 2rem 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero {
+  padding: 0 2rem 0 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.heroText {
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,7 +65,7 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 3rem;
 }
 
 .title,
@@ -55,7 +74,7 @@
 }
 
 .description {
-  margin: 4rem 0;
+  margin: 2rem 0 0 2rem;
   line-height: 1.5;
   font-size: 1.5rem;
 }
@@ -108,7 +127,8 @@
 }
 
 .logo {
-  height: 1em;
+  height: 0.1em;
+  max-height: 20px;
   margin-left: 0.5rem;
 }
 
