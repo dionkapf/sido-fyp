@@ -31,6 +31,7 @@ let staffRouter = require("./routes/staff");
 let witnessRouter = require("./routes/witness");
 let registerRouter = require("./routes/register");
 let loginRouter = require("./routes/login");
+let userRouter = require("./routes/users");
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use("/api/roles", roleRouter);
 app.use("/api/sectors", sectorRouter);
 app.use("/api/staff", staffRouter);
 app.use("/api/witnesses", witnessRouter);
+app.use("/users", userRouter);
 app.get("/download/:file", (req, res) => {
   console.log("Downloading...");
   const { file } = req.params;

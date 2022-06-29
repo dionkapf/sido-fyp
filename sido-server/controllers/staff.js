@@ -99,8 +99,110 @@ const getStaffByUserId = async (id) => {
     });
 };
 
+const createStaff = (req, res) => {
+  const {
+    userId,
+    firstName,
+    middleName,
+    lastName,
+    birthDate,
+    email,
+    phoneNumber,
+    branch,
+  } = req.body;
+  let columns = [
+    `user_id`,
+    `first_name`,
+    `middle_name`,
+    `last_name`,
+    `birthdate`,
+    `email`,
+    `phone_number`,
+    `branch`,
+  ];
+  let values = [
+    parseInt(userId),
+    firstName,
+    middleName,
+    lastName,
+    birthDate,
+    email,
+    phoneNumber,
+    parseInt(branch),
+  ];
+  if (middleName == "") {
+    columns = [
+      `user_id`,
+      `first_name`,
+      `last_name`,
+      `birthdate`,
+      `email`,
+      `phone_number`,
+      `branch`,
+    ];
+    values = [
+      parseInt(userId),
+      firstName,
+      lastName,
+      birthDate,
+      email,
+      phoneNumber,
+      parseInt(branch),
+    ];
+  }
+  console.log("Values", values);
+  new Model("staff")
+    .insert(columns, values)
+    .then((staff_data) => {
+      res.status(200).json({ success: true, data: staff_data.rows[0] });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+const updateStaff = (req, res) => {
+  const {
+    firstName,
+    middleName,
+    lastName,
+    birthDate,
+    email,
+    branch,
+    phoneNumber,
+  } = req.body;
+  let columns = [
+    `first_name`,
+    `middle_name`,
+    `last_name`,
+    `birthdate`,
+    `email`,
+    `branch`,
+    `phone_number`,
+  ];
+  let values = [
+    firstName,
+    middleName,
+    lastName,
+    birthDate,
+    email,
+    branch,
+    phoneNumber,
+  ];
+  const { id } = req.params;
+  new Model("staff")
+    .update(columns, values, [parseInt(id)])
+    .then((staff_data) => {
+      res.status(200).json({ success: true, data: staff_data.rows });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 module.exports = {
   getStaff,
   getStaffs,
   getStaffByUserId,
+  createStaff,
+  updateStaff,
 };

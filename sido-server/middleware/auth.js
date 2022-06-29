@@ -21,7 +21,59 @@ function checkPassword(password) {
   return re.test(password);
 }
 
+function validatePassword(password, hashedPassword) {
+  return bcrypt.compare(password, hashedPassword);
+}
+
+async function changePassword(req, res) {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  if (!(oldPassword && newPassword && confirmPassword)) {
+    res.status(400).json({ success: false, message: "Missing fields" });
+  }
+  if (newPassword !== confirmPassword) {
+    console.log("Passwords do not match");
+    res.status(400).json({ success: false, message: "Passwords do not match" });
+  } else if (!checkPassword(newPassword)) {
+    console.log("Password does not meet requirements");
+    res
+      .status(400)
+      .json({ success: false, message: "Password is not strong enough" });
+  } else if (oldPassword === newPassword) {
+    console.log("Username and password cannot be the same");
+    res.status(400).json({
+      success: false,
+      message: "Password cannot be the same as old password",
+    });
+  } else {
+    try {
+      console.log("Hashing password...");
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+      const user = { password: hashedPassword };
+      const user_data = await updateUser(user);
+      console.log("User data", user_data.rows[0]);
+      if (user_data.rowCount > 0) {
+        console.log("User updated", user_data.rows[0]);
+        res.status(201).json({
+          success: true,
+          message: "Password changed",
+          user: user_data.rows[0],
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Password not changed",
+        });
+      }
+      // console.log("User", newUser);
+      // res.status(200).json({ success: true, data: newUser });
+    } catch (err) {
+      res.status(401).json({ success: false, message: err.message });
+    }
+  }
+}
+
 function checkifUserExists(username) {
+  console.log("Checking if user exists...");
   return new Promise((resolve, reject) => {
     new Model(`"user"`)
       .select(
@@ -32,8 +84,10 @@ function checkifUserExists(username) {
       )
       .then((user_data) => {
         if (user_data.rows.length > 0) {
+          console.log("User exists");
           resolve(true);
         } else {
+          console.log("User does not exist");
           resolve(false);
         }
       })
@@ -468,9 +522,68 @@ async function getRefreshToken(user_id) {
   });
 }
 
+async function updateUser(req, res) {
+  const { id } = req.params;
+  const { username, password, confirmPassword } = req.body;
+  const userExists = await checkifUserExists(username);
+  if (!(username && password && confirmPassword)) {
+    res.status(400).json({ success: false, message: "Missing fields" });
+  }
+  if (password !== confirmPassword) {
+    console.log("Passwords do not match");
+    res.status(400).json({ success: false, message: "Passwords do not match" });
+  } else if (!checkPassword(password)) {
+    console.log("Password does not meet requirements");
+    res
+      .status(400)
+      .json({ success: false, message: "Password is not strong enough" });
+  } else if (username === password) {
+    console.log("Username and password cannot be the same");
+    res.status(400).json({
+      success: false,
+      message: "Password cannot be the same as username",
+    });
+  } else if (!userExists) {
+    console.log("User doesn't exist");
+    res.status(409).json({
+      success: false,
+      message: "User doesn't exist",
+    });
+  } else {
+    try {
+      console.log("Hashing password...");
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      new Model(`"user"`)
+        .update([`password`], [hashedPassword], [parseInt(id)])
+        .then((user_data) => {
+          console.log("User data", user_data.rows[0]);
+          if (user_data.rowCount > 0) {
+            console.log("User updated", user_data.rows[0]);
+            res.status(201).json({
+              success: true,
+              message: "User updated",
+              user: user_data.rows[0],
+            });
+          } else {
+            res.status(400).json({
+              success: false,
+              message: "User not updated",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (err) {
+      res.status(401).json({ success: false, message: err.message });
+    }
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
+  updateUser,
   getCurrentUser,
   checkifUserExists,
   authenticateToken,
