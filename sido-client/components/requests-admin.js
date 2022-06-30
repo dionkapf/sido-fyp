@@ -174,23 +174,23 @@ export default function RequestsAdmin({ list, title, description, options }) {
     );
     const docResponse = await res.json();
     console.log("Doc response", docResponse);
-      if (docResponse.success) {
-        alert(
-          `File is called: ${docResponse.file_name}\nFile is in: ${docResponse.file_path}`
-        );
-        router.push(`http://localhost:5000/download/${docResponse.file_name}`);
-    //     setSnackbarMessage("Document generated successfully");
-    //     setSuccessSnack(true);
-    //     // router.push(
-    //     //   `http://localhost:5000/api/formalization-requests/${id}/doc`
-    //     // );
-      } else {
-        alert(`${JSON.stringify(docResponse)}`);
-    //     setSnackbarMessage("Error generating document");
-    //     setTimeout(() => {
-    //       setInfoSnack(true);
-    //     }, 1000);
-      }
+    if (docResponse.success) {
+      // alert(
+      //   `File is called: ${docResponse.file_name}\nFile is in: ${docResponse.file_path}`
+      // );
+      router.push(`http://localhost:5000/download/${docResponse.file_name}`);
+      //     setSnackbarMessage("Document generated successfully");
+      //     setSuccessSnack(true);
+      //     // router.push(
+      //     //   `http://localhost:5000/api/formalization-requests/${id}/doc`
+      //     // );
+    } else {
+      // alert(`${JSON.stringify(docResponse)}`);
+      //     setSnackbarMessage("Error generating document");
+      //     setTimeout(() => {
+      //       setInfoSnack(true);
+      //     }, 1000);
+    }
   };
   const handleCloseDialog = (event, reason) => {
     if (reason === "clickaway") {
@@ -274,7 +274,7 @@ export default function RequestsAdmin({ list, title, description, options }) {
           }, 1500);
         });
       } else if (user.role == 5) {
-        alert("IN");
+        // alert("IN");
         const res = fetch(
           `http://localhost:5000/api/formalization-requests/${request_id}`,
           {
@@ -318,7 +318,7 @@ export default function RequestsAdmin({ list, title, description, options }) {
           }
         );
         res.then((res) => {
-          alert("Res", JSON.stringify(res.data));
+          // alert("Res", JSON.stringify(res.data));
           handleCloseDialog();
           setSnackbarMessage(`${rowData.Owner}'s request has been rejected`);
           setInfoSnack(true);
@@ -338,7 +338,7 @@ export default function RequestsAdmin({ list, title, description, options }) {
           }
         );
         res.then((res) => {
-          alert("Res", JSON.stringify(res.data));
+          // alert("Res", JSON.stringify(res.data));
           handleCloseDialog();
           setSnackbarMessage(`${rowData.Owner}'s request has been rejected`);
           setInfoSnack(true);
@@ -522,7 +522,7 @@ export default function RequestsAdmin({ list, title, description, options }) {
                                   return (
                                     <Button
                                       onClick={() => {
-                                        alert("Making it happen");
+                                        // alert("Making it happen");
                                         handleGenerate(row);
                                       }}
                                       key={action.name}
