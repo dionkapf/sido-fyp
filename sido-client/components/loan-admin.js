@@ -164,7 +164,7 @@ export default function LoanAdmin({ list, title, description, options }) {
   const handleClickOpen = () => {
     // setOpen(true);
     console.log("List", list);
-    alert(`List: ${JSON.stringify(list)}`);
+    // alert(`List: ${JSON.stringify(list)}`);
     alert(`coLUMNS: ${JSON.stringify(columns)}`);
   };
 

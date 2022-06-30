@@ -221,7 +221,7 @@ export default function PaymentsAdmin({
           break;
 
         default:
-          alert(`Unknown mode: ${mode}`);
+          // alert(`Unknown mode: ${mode}`);
           break;
       }
     },

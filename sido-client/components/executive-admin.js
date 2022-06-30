@@ -361,7 +361,7 @@ export default function ExecutiveAdmin({
   };
   const handleDeleteOpen = (row) => {
     setMode("delete");
-    alert(`User id -> ${JSON.stringify(row)}`);
+    // alert(`User id -> ${JSON.stringify(row)}`);
     setResetUsername(row.staff_data.name);
     setRowId(parseInt(row.staff_data.user_id));
     setDialogTitle(`Reset ${row.Name}'s account?`);
@@ -427,7 +427,7 @@ export default function ExecutiveAdmin({
   };
 
   const resetUser = async () => {
-    alert(`${mode} ${resetUsername} ${rowId}`);
+    // alert(`${mode} ${resetUsername} ${rowId}`);
     const defaultPassword =
       "@123456" +
       resetUsername[0].toUpperCase() +

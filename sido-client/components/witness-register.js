@@ -124,7 +124,7 @@ export default function WitnessRegister() {
             ),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            alert(`Starting...`);
+            // alert(`Starting...`);
             setWitness1({
               first_name: values.first_name1,
               middle_name: values.middle_name1,
@@ -147,10 +147,10 @@ export default function WitnessRegister() {
             });
             console.log("One details", witness1);
             console.log("Two details", witness2);
-            alert(`Witness 1 ${JSON.stringify(witness1)}`);
-            alert(`Witness 2 ${JSON.stringify(witness2)}`);
-            alert(`Loan:  ${JSON.stringify(loanData)}`);
-            alert("Success!");
+            // alert(`Witness 1 ${JSON.stringify(witness1)}`);
+            // alert(`Witness 2 ${JSON.stringify(witness2)}`);
+            // alert(`Loan:  ${JSON.stringify(loanData)}`);
+            // alert("Success!");
             router.push("/disburse-loan");
           }}
         >

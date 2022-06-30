@@ -95,14 +95,6 @@ export default function Loans({ list, title, description }) {
         description={description}
         options={loanOptions}
       />
-      <Button
-        onClick={() => {
-          alert(JSON.stringify(filteredList));
-          alert(JSON.stringify(list));
-        }}
-      >
-        XX
-      </Button>
     </>
   );
 }

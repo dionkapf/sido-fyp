@@ -233,7 +233,7 @@ export default function DisburseLoan() {
 
   const handleBack = () => {
     // history.go(-1);
-    alert(JSON.stringify(witness1));
+    // alert(JSON.stringify(witness1));
     alert(JSON.stringify(witness2));
     console.log(JSON.stringify(witness1));
   };

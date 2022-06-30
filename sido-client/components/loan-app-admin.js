@@ -141,7 +141,7 @@ export default function LoanAppAdmin({ list, title, description, options }) {
   // };
 
   const accept = () => {
-    alert("Hoorah");
+    // alert("Hoorah");
   };
 
   const [rejectOpen, setRejectOpen] = useState(false);

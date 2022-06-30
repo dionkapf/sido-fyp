@@ -179,7 +179,7 @@ export default function FormRequest({ branches, requests }) {
       console.log("User is not logged in");
       router.push("/login");
     } else if (user.formalized) {
-      alert("Your business is formalized already!");
+      // alert("Your business is formalized already!");
       router.push("/");
     } else if (pendingRequest) {
       setPending(true);

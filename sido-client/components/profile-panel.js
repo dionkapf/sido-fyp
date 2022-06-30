@@ -191,7 +191,7 @@ export default function ProfilePanel({ user, branches, sectors }) {
     return true;
   };
   const updateOwner = async (ownerData) => {
-    alert(`Owner: ${user.id}`);
+    // alert(`Owner: ${user.id}`);
     const ownerRes = await fetch(
       `http://localhost:5000/api/owners/${user.id}`,
       {
@@ -212,7 +212,7 @@ export default function ProfilePanel({ user, branches, sectors }) {
     return true;
   };
   const updateStaff = async (staffData) => {
-    alert(`Owner: ${user.id}`);
+    // alert(`Owner: ${user.id}`);
     const staffRes = await fetch(
       `http://localhost:5000/api/staff/${user.id}`,
       {
@@ -309,7 +309,7 @@ export default function ProfilePanel({ user, branches, sectors }) {
         password: values.password,
         confirmPassword: values.confirmPassword,
       };
-      alert(`Credentials: ${JSON.stringify(credData)}`);
+      // alert(`Credentials: ${JSON.stringify(credData)}`);
       const changeStatus = changePassword(credData);
       if (changeStatus) {
         setSnackbarMessage("Password changed successfully");
@@ -401,7 +401,7 @@ export default function ProfilePanel({ user, branches, sectors }) {
         formalized: values.formalized,
         address: values.address,
       };
-      alert(`Owner: ${JSON.stringify(ownerData)}`);
+      // alert(`Owner: ${JSON.stringify(ownerData)}`);
       console.log(`Owner: ${JSON.stringify(ownerData)}`);
       const updateStatus = updateOwner(ownerData);
       if (updateStatus) {
